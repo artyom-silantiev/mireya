@@ -6,15 +6,12 @@ export enum LifecycleHandlerType {
 }
 export type LifecycleHandler = () => Promise<void> | void;
 export type ModuleMeta = {
+  id: number;
+  usedModules: ModuleMeta[];
   items: any[];
   lifecycleHandlers: {
     [type: string]: LifecycleHandler[];
   };
-};
-export type ModuleWrap<T> = {
-  id: number;
-  meta: ModuleMeta;
-  module: T;
 };
 
 export type ModuleSetupCtx = ReturnType<typeof moduleSetupCtx>;

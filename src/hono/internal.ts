@@ -1,25 +1,26 @@
 import type { MiddlewareHandler } from 'hono';
-import { metadata } from '../internal/metadata';
-import { sController } from '../internal/symbols';
-import type { StandartMethod } from './types';
+import { Metadata } from '../internal/metadata';
+import type { ControllerMeta, StandartMethod } from './types';
+
+export const controllersMeta = new Metadata();
 
 export function baseHonoMiddlewares(
   middlewares: MiddlewareHandler[],
   target: any,
-  key?: string | symbol,
+  key?: string,
 ) {
   if (key) {
     // method decorator
-    metadata.merge([target.constructor, sController], {
+    controllersMeta.merge(target.constructor, {
       handlers: {
         [key]: {
           middlewares,
         },
       },
-    });
+    } as ControllerMeta);
   } else {
     // class decorator
-    metadata.merge([target, sController], { middlewares });
+    controllersMeta.merge(target, { middlewares } as ControllerMeta);
   }
 }
 
@@ -28,13 +29,13 @@ export function baseHonoHandlerDecorator(
   path: string = '',
 ) {
   return function (target: Object, key: string) {
-    metadata.merge([target.constructor, sController], {
+    controllersMeta.merge(target.constructor, {
       handlers: {
         [key]: {
           method,
           path,
         },
       },
-    });
+    } as ControllerMeta);
   };
 }

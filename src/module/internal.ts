@@ -1,15 +1,16 @@
+import { Metadata } from '../lib';
 import {
   type ModuleMeta,
-  type ModuleWrap,
   type LifecycleHandler,
   type ModuleSetupCtx,
   type ModuleSetup,
   LifecycleHandlerType,
 } from './types';
 
-export const appModules = [] as ModuleWrap<unknown>[];
-export function pushAppModule<T>(moduleWrap: ModuleWrap<T>) {
-  appModules.push(moduleWrap);
+export const modulesMeta = new Metadata();
+export const appModules = [] as unknown[];
+export function pushAppModule<T>(moduleBody: T) {
+  appModules.push(moduleBody);
 }
 
 export function moduleSetupCtx(meta: ModuleMeta, isAppModule = false) {
@@ -25,6 +26,21 @@ export function moduleSetupCtx(meta: ModuleMeta, isAppModule = false) {
       }
       return publicItems;
     },
+
+    // TODO
+    useModule() {},
+    useModules() {},
+
+    // TODO
+    createService() {},
+
+    // TODO
+    createHonoController() {},
+    createHonoRouter() {},
+
+    // TODO
+    createGRPCService() {},
+
     onModuleInit(handler: LifecycleHandler) {
       if (!meta.lifecycleHandlers[LifecycleHandlerType.init]) {
         meta.lifecycleHandlers[LifecycleHandlerType.init] = [];
@@ -47,6 +63,8 @@ export function internalDefineModule<T>(
 ) {
   const moduleId = modulesCount++;
   const meta = {
+    id: moduleId,
+    usedModules: [],
     items: [] as any[],
     lifecycleHandlers: {},
   } as ModuleMeta;
@@ -57,14 +75,10 @@ export function internalDefineModule<T>(
   } else {
     moduleCtx = moduleSetupCtx(meta);
   }
+  const moduleBody = setup(moduleCtx as any);
 
-  const moduleWrap = {
-    id: moduleId,
-    meta,
-    module: setup(moduleCtx as any),
-  } as ModuleWrap<T>;
+  pushAppModule(moduleBody);
+  modulesMeta.set(moduleBody, meta);
 
-  pushAppModule(moduleWrap);
-
-  return moduleWrap.module;
+  return moduleBody;
 }

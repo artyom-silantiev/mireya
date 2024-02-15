@@ -1,12 +1,5 @@
 import type { MiddlewareHandler } from 'hono';
 
-export type ControllerMeta = {
-  middlewares?: MiddlewareHandler[];
-  handlers?: {
-    [key: string]: HonoHandlerMeta;
-  };
-};
-
 export enum StandartMethod {
   USE = 'USE',
   ALL = 'ALL',
@@ -23,4 +16,11 @@ export type HonoHandlerMeta = {
   method?: StandartMethod | string;
   path?: string;
   middlewares?: MiddlewareHandler[];
+};
+
+export type ControllerMeta = {
+  middlewares?: MiddlewareHandler[];
+  handlers?: {
+    [key: string]: HonoHandlerMeta;
+  };
 };

@@ -1,14 +1,16 @@
 import type { MiddlewareHandler } from 'hono';
-import { metadata } from '../internal/metadata';
-import { sController } from '../internal/symbols';
 import { StandartMethod, type ControllerMeta } from './types';
-import { baseHonoHandlerDecorator, baseHonoMiddlewares } from './internal';
+import {
+  baseHonoHandlerDecorator,
+  baseHonoMiddlewares,
+  controllersMeta,
+} from './internal';
 
 // Controller decorator
 
 export function Controller() {
   return function (target: any) {
-    metadata.merge([target, sController], {} as ControllerMeta);
+    controllersMeta.merge(target, {} as ControllerMeta);
   };
 }
 

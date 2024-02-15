@@ -1,5 +1,9 @@
 import { LifecycleHandlerType } from '../module';
-import { internalDefineModule, appModules } from '../module/internal';
+import {
+  internalDefineModule,
+  appModules,
+  modulesMeta,
+} from '../module/internal';
 import { listenExit } from './internal';
 import type { AppModuleSetup } from './types';
 
@@ -11,8 +15,12 @@ export function defineApp<T>(appSetup: AppModuleSetup<T>) {
   async function run() {
     listenExit();
 
-    for (const moduleWrap of appModules) {
-      for (const moduleItem of moduleWrap.meta.items) {
+    for (const module of appModules) {
+      const moduleMeta = modulesMeta.get(module);
+
+      console.log(moduleMeta);
+
+      for (const moduleItem of moduleMeta.items) {
         if (
           typeof moduleItem === 'object' &&
           typeof moduleItem.onModuleInit === 'function'
@@ -24,9 +32,11 @@ export function defineApp<T>(appSetup: AppModuleSetup<T>) {
       }
     }
 
-    for (const moduleWrap of appModules) {
-      if (moduleWrap.meta.lifecycleHandlers) {
-        for (const lifecycleHandler of moduleWrap.meta.lifecycleHandlers[
+    for (const module of appModules) {
+      const moduleMeta = modulesMeta.get(module);
+
+      if (moduleMeta.lifecycleHandlers) {
+        for (const lifecycleHandler of moduleMeta.lifecycleHandlers[
           LifecycleHandlerType.init
         ]) {
           await lifecycleHandler();
