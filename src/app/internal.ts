@@ -1,5 +1,5 @@
 import { LifecycleHandlerType, type ModuleMeta } from '../module/types';
-import { moduleSetupCtx, appModules } from '../module/internal';
+import { moduleSetupCtx, appModules, modulesMeta } from '../module/internal';
 
 export function appModuleSetupCtx(meta: ModuleMeta) {
   return {
@@ -9,8 +9,10 @@ export function appModuleSetupCtx(meta: ModuleMeta) {
 }
 
 async function beforeExit() {
-  for (const moduleWrap of appModules) {
-    for (const moduleItem of moduleWrap.meta.items) {
+  for (const module of appModules) {
+    const moduleMeta = modulesMeta.get(module);
+
+    for (const moduleItem of moduleMeta.items) {
       if (
         typeof moduleItem === 'object' &&
         typeof moduleItem.onModuleDestroy === 'function'
@@ -20,9 +22,11 @@ async function beforeExit() {
     }
   }
 
-  for (const moduleWrap of appModules) {
-    for (const lifecycleHandler of moduleWrap.meta.lifecycleHandlers[
-      LifecycleHandlerType.destroy
+  for (const module of appModules) {
+    const moduleMeta = modulesMeta.get(module);
+
+    for (const lifecycleHandler of moduleMeta.lifecycleHandlers[
+      LifecycleHandlerType.init
     ]) {
       await lifecycleHandler();
     }
