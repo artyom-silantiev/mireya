@@ -8,6 +8,7 @@
     "./hono": "./hono/index.js",
     "./lib": "./lib/index.js",
     "./module": "./module/index.js",
+    "./service": "./service/index.js",
     "./*": "./index.js"
   },
   "scripts": {

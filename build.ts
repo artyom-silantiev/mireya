@@ -6,11 +6,12 @@ async function copyToDist(file: string) {
 }
 
 const entrypoints = [
-  './src/index.ts',
   './src/app/index.ts',
   './src/hono/index.ts',
   './src/lib/index.ts',
   './src/module/index.ts',
+  './src/service/index.ts',
+  './src/index.ts',
 ];
 
 // clear dist
