@@ -6,9 +6,9 @@ import type {
   ModuleSetup,
 } from './types';
 
-export const modules = [] as ModuleWrap<unknown>[];
-export function pushModule<T>(moduleWrap: ModuleWrap<T>) {
-  modules.push(moduleWrap);
+export const appModules = [] as ModuleWrap<unknown>[];
+export function pushAppModule<T>(moduleWrap: ModuleWrap<T>) {
+  appModules.push(moduleWrap);
 }
 
 export function moduleSetupCtx(meta: ModuleMeta, isAppModule = false) {
@@ -34,7 +34,10 @@ export function moduleSetupCtx(meta: ModuleMeta, isAppModule = false) {
 }
 
 let modulesCount = 0;
-export function __defineModule<T>(setup: ModuleSetup<T>, isAppModule: boolean) {
+export function internalDefineModule<T>(
+  setup: ModuleSetup<T>,
+  isAppModule: boolean,
+) {
   const moduleId = modulesCount++;
   const meta = {
     items: [] as any[],
@@ -55,7 +58,7 @@ export function __defineModule<T>(setup: ModuleSetup<T>, isAppModule: boolean) {
     module: setup(moduleCtx as any),
   } as ModuleWrap<T>;
 
-  pushModule(moduleWrap);
+  pushAppModule(moduleWrap);
 
   return moduleWrap.module;
 }
