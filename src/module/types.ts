@@ -1,4 +1,4 @@
-import type { moduleSetupCtx } from './internal';
+import type { moduleSetupCtx } from "./internal";
 
 export type LifecycleHandler = () => Promise<void> | void;
 export type ModuleMeta = {

@@ -1,4 +1,10 @@
-import type { ModuleMeta, ModuleWrap, LifecycleHandler, ModuleSetupCtx, ModuleSetup } from './types';
+import type {
+  ModuleMeta,
+  ModuleWrap,
+  LifecycleHandler,
+  ModuleSetupCtx,
+  ModuleSetup,
+} from "./types";
 
 export const modules = [] as ModuleWrap<unknown>[];
 export function pushModule<T>(moduleWrap: ModuleWrap<T>) {
@@ -28,10 +34,7 @@ export function moduleSetupCtx(meta: ModuleMeta, isAppModule = false) {
 }
 
 let modulesCount = 0;
-export function __defineModule<T>(
-  setup: ModuleSetup<T>,
-  isAppModule: boolean,
-) {
+export function __defineModule<T>(setup: ModuleSetup<T>, isAppModule: boolean) {
   const moduleId = modulesCount++;
   const meta = {
     items: [] as any[],
