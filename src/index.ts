@@ -1,1 +1,1 @@
-export const external = 100;
+export const Mireya = {};

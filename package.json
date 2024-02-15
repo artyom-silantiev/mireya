@@ -1,7 +1,15 @@
 {
   "name": "mireya",
-  "module": "src/index.ts",
-  "type": "module",
+  "version": "0.1.0",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "exports": {
+    "./app": "./app/index.js",
+    "./hono": "./hono/index.js",
+    "./lib": "./lib/index.js",
+    "./module": "./module/index.js",
+    "./*": "./index.js"
+  },
   "scripts": {
     "build": "bun run build.ts"
   },
@@ -16,5 +24,15 @@
   "dependencies": {
     "hono": "^4.0.2",
     "zod": "^3.22.4"
-  }
+  },
+  "keywords": [
+    "backend",
+    "framework"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/artyom-silantiev/mireya.git"
+  },
+  "author": "Artyom Silantiev",
+  "license": "MIT"
 }
