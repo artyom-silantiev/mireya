@@ -1,7 +1,7 @@
-import type { MiddlewareHandler } from "hono";
-import { metadata } from "../internal/metadata";
-import { sController } from "../internal/symbols";
-import type { StandartMethod } from "./types";
+import type { MiddlewareHandler } from 'hono';
+import { metadata } from '../internal/metadata';
+import { sController } from '../internal/symbols';
+import type { StandartMethod } from './types';
 
 export function baseHonoMiddlewares(
   middlewares: MiddlewareHandler[],
@@ -25,7 +25,7 @@ export function baseHonoMiddlewares(
 
 export function baseHonoHandlerDecorator(
   method: StandartMethod | string,
-  path: string = "",
+  path: string = '',
 ) {
   return function (target: Object, key: string) {
     metadata.merge([target.constructor, sController], {

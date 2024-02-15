@@ -1,4 +1,4 @@
-import { mergeDeep } from "./utils";
+import { mergeDeep } from './utils';
 
 export class Metadata {
   METADATA = new Map<any, any>();

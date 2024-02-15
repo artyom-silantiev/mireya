@@ -4,7 +4,7 @@ import type {
   LifecycleHandler,
   ModuleSetupCtx,
   ModuleSetup,
-} from "./types";
+} from './types';
 
 export const modules = [] as ModuleWrap<unknown>[];
 export function pushModule<T>(moduleWrap: ModuleWrap<T>) {

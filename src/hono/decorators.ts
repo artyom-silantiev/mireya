@@ -1,8 +1,8 @@
-import type { MiddlewareHandler } from "hono";
-import { metadata } from "../internal/metadata";
-import { sController } from "../internal/symbols";
-import { StandartMethod, type ControllerMeta } from "./types";
-import { baseHonoHandlerDecorator, baseHonoMiddlewares } from "./internal";
+import type { MiddlewareHandler } from 'hono';
+import { metadata } from '../internal/metadata';
+import { sController } from '../internal/symbols';
+import { StandartMethod, type ControllerMeta } from './types';
+import { baseHonoHandlerDecorator, baseHonoMiddlewares } from './internal';
 
 // Controller decorator
 

@@ -35,5 +35,10 @@
     "url": "https://github.com/artyom-silantiev/mireya.git"
   },
   "author": "Artyom Silantiev",
-  "license": "MIT"
+  "license": "MIT",
+  "prettier": {
+    "singleQuote": true,
+    "tabWidth": 2,
+    "useTabs": false
+  }
 }

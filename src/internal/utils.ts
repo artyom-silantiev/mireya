@@ -5,7 +5,7 @@
  * @author inspired by [jhildenbiddle](https://stackoverflow.com/a/48218209).
  */
 export function mergeDeep(target: any, source: any) {
-  const isObject = (obj: any) => obj && typeof obj === "object";
+  const isObject = (obj: any) => obj && typeof obj === 'object';
 
   if (!isObject(target) || !isObject(source)) {
     return source;

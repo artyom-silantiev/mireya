@@ -1,1 +1,1 @@
-export { Metadata } from "../internal/metadata";
+export { Metadata } from '../internal/metadata';
