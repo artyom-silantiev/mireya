@@ -1,4 +1,4 @@
-import type { ModuleMeta } from '../module/types';
+import { LifecycleHandlerType, type ModuleMeta } from '../module/types';
 import { moduleSetupCtx, appModules } from '../module/internal';
 
 export function appModuleSetupCtx(meta: ModuleMeta) {
@@ -21,8 +21,10 @@ async function beforeExit() {
   }
 
   for (const moduleWrap of appModules) {
-    if (moduleWrap.meta.destroyHandler) {
-      await moduleWrap.meta.destroyHandler();
+    for (const lifecycleHandler of moduleWrap.meta.lifecycleHandlers[
+      LifecycleHandlerType.destroy
+    ]) {
+      await lifecycleHandler();
     }
   }
 }

@@ -1,9 +1,10 @@
-import type {
-  ModuleMeta,
-  ModuleWrap,
-  LifecycleHandler,
-  ModuleSetupCtx,
-  ModuleSetup,
+import {
+  type ModuleMeta,
+  type ModuleWrap,
+  type LifecycleHandler,
+  type ModuleSetupCtx,
+  type ModuleSetup,
+  LifecycleHandlerType,
 } from './types';
 
 export const appModules = [] as ModuleWrap<unknown>[];
@@ -25,10 +26,16 @@ export function moduleSetupCtx(meta: ModuleMeta, isAppModule = false) {
       return publicItems;
     },
     onModuleInit(handler: LifecycleHandler) {
-      meta.initHandler = handler;
+      if (!meta.lifecycleHandlers[LifecycleHandlerType.init]) {
+        meta.lifecycleHandlers[LifecycleHandlerType.init] = [];
+      }
+      meta.lifecycleHandlers[LifecycleHandlerType.init].push(handler);
     },
     onModuleDestroy(handler: LifecycleHandler) {
-      meta.destroyHandler = handler;
+      if (!meta.lifecycleHandlers[LifecycleHandlerType.destroy]) {
+        meta.lifecycleHandlers[LifecycleHandlerType.destroy] = [];
+      }
+      meta.lifecycleHandlers[LifecycleHandlerType.destroy].push(handler);
     },
   };
 }
@@ -41,8 +48,7 @@ export function internalDefineModule<T>(
   const moduleId = modulesCount++;
   const meta = {
     items: [] as any[],
-    initHandler: null as null | { (): Promise<void> },
-    destroyHandler: null as null | { (): Promise<void> },
+    lifecycleHandlers: {},
   } as ModuleMeta;
 
   let moduleCtx!: ModuleSetupCtx;

@@ -1,10 +1,15 @@
 import type { moduleSetupCtx } from './internal';
 
+export enum LifecycleHandlerType {
+  init = 'init',
+  destroy = 'destroy',
+}
 export type LifecycleHandler = () => Promise<void> | void;
 export type ModuleMeta = {
   items: any[];
-  initHandler: LifecycleHandler | null;
-  destroyHandler: LifecycleHandler | null;
+  lifecycleHandlers: {
+    [type: string]: LifecycleHandler[];
+  };
 };
 export type ModuleWrap<T> = {
   id: number;
