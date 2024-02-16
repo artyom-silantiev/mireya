@@ -1,12 +1,5 @@
-import { LifecycleHandlerType, type ModuleMeta } from '../module/types';
-import { moduleSetupCtx, appModules, modulesMeta } from '../module/internal';
-
-export function appModuleSetupCtx(meta: ModuleMeta) {
-  return {
-    ...moduleSetupCtx(meta, true),
-    // TODO APP SETUP...
-  };
-}
+import { LifecycleHandlerType } from '../module/types';
+import { appModules, modulesMeta } from '../module/internal';
 
 async function beforeExit() {
   for (const module of appModules) {

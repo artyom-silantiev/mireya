@@ -1,7 +1,8 @@
-import type { moduleSetupCtx } from './internal';
+import type { Module } from '.';
 
 export type ModuleMeta = {
   id: number;
+  module: Module;
   usedModules: Set<ModuleMeta>;
   items: Set<any>;
   lifecycleHandlers: {
@@ -14,6 +15,3 @@ export enum LifecycleHandlerType {
   destroy = 'destroy',
 }
 export type LifecycleHandler = () => Promise<void> | void;
-
-export type ModuleSetupCtx = ReturnType<typeof moduleSetupCtx>;
-export type ModuleSetup<T> = (ctx: ModuleSetupCtx) => T;

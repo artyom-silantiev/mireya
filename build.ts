@@ -6,7 +6,7 @@ async function copyToDist(file: string) {
 }
 
 const entrypoints = [
-  './src/app/index.ts',
+  './src/application/index.ts',
   './src/hono/index.ts',
   './src/lib/index.ts',
   './src/module/index.ts',

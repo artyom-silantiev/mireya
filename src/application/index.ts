@@ -1,18 +1,22 @@
-import {
-  internalDefineModule,
-  appModules,
-  modulesMeta,
-} from '../module/internal';
+import { Module } from '../module';
+import { appModules, modulesMeta } from '../module/internal';
 import { LifecycleHandlerType } from '../module/types';
 import { listenExit } from './internal';
-import type { AppModuleSetup } from './types';
 
 export type * from './types';
 
-export function defineApp<T>(appSetup: AppModuleSetup<T>) {
-  const appModule = internalDefineModule(appSetup, true);
+export class Application extends Module {
+  constructor() {
+    super();
+  }
 
-  async function run() {
+  private isRunning = false;
+  async run() {
+    if (this.isRunning) {
+      return;
+    }
+    this.isRunning = true;
+
     listenExit();
 
     for (const module of appModules) {
@@ -42,9 +46,4 @@ export function defineApp<T>(appSetup: AppModuleSetup<T>) {
       }
     }
   }
-
-  return {
-    module: appModule,
-    run,
-  };
 }

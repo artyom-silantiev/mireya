@@ -1,4 +1,10 @@
-# mireya
+# Mireya
+
+## Description
+
+Mireya - backend framefork
+
+## Install
 
 To install dependencies:
 

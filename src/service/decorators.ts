@@ -1,9 +1,11 @@
-import { type ServiceMeta } from './types';
-import { servicesMeta } from './internal';
+import { InjectableItemType, type InjectableItemMeta } from '../internal/types';
+import { injectableItems } from '../module/internal';
 
 // Service decorator
 export function Service() {
   return function (target: any) {
-    servicesMeta.merge(target, {} as ServiceMeta);
+    injectableItems.merge(target, {
+      types: new Set([InjectableItemType.Service]),
+    } as InjectableItemMeta);
   };
 }
