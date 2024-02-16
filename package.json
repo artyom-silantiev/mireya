@@ -1,15 +1,32 @@
 {
   "name": "mireya",
   "version": "0.1.0",
-  "main": "index.js",
-  "types": "index.d.ts",
+  "description": "Backend framework",
+  "type": "module",
+  "module": "dist/index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "exports": {
-    "./app": "./app/index.js",
-    "./hono": "./hono/index.js",
-    "./lib": "./lib/index.js",
-    "./module": "./module/index.js",
-    "./service": "./service/index.js",
-    "./*": "./index.js"
+    "./app": {
+      "types": "./dist/app/index.d.ts",
+      "import": "./dist/app/index.js"
+    },
+    "./hono": {
+      "types": "./dist/hono/index.d.ts",
+      "import": "./dist/hono/index.js"
+    },
+    "./lib": {
+      "types": "./dist/lib/index.d.ts",
+      "import": "./dist/lib/index.js"
+    },
+    "./module": {
+      "types": "./dist/module/index.d.ts",
+      "import": "./dist/module/index.js"
+    },
+    "./service": {
+      "types": "./dist/service/index.d.ts",
+      "import": "./dist/service/index.js"
+    }
   },
   "scripts": {
     "build": "bun run build.ts"

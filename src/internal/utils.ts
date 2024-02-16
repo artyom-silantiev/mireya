@@ -15,7 +15,9 @@ export function mergeDeep(target: any, source: any) {
     const targetValue = target[key];
     const sourceValue = source[key];
 
-    if (Array.isArray(targetValue) && Array.isArray(sourceValue)) {
+    if (targetValue instanceof Set && sourceValue instanceof Set) {
+      sourceValue.forEach((value) => targetValue.add(value));
+    } else if (Array.isArray(targetValue) && Array.isArray(sourceValue)) {
       target[key] = targetValue.concat(sourceValue);
     } else if (isObject(targetValue) && isObject(sourceValue)) {
       target[key] = mergeDeep(Object.assign({}, targetValue), sourceValue);

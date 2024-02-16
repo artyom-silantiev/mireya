@@ -1,13 +1,13 @@
-import { LifecycleHandlerType } from '../module';
 import {
   internalDefineModule,
   appModules,
   modulesMeta,
 } from '../module/internal';
+import { LifecycleHandlerType } from '../module/types';
 import { listenExit } from './internal';
 import type { AppModuleSetup } from './types';
 
-export * from './types';
+export type * from './types';
 
 export function defineApp<T>(appSetup: AppModuleSetup<T>) {
   const appModule = internalDefineModule(appSetup, true);
@@ -17,8 +17,6 @@ export function defineApp<T>(appSetup: AppModuleSetup<T>) {
 
     for (const module of appModules) {
       const moduleMeta = modulesMeta.get(module);
-
-      console.log(moduleMeta);
 
       for (const moduleItem of moduleMeta.items) {
         if (

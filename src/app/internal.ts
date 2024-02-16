@@ -26,7 +26,7 @@ async function beforeExit() {
     const moduleMeta = modulesMeta.get(module);
 
     for (const lifecycleHandler of moduleMeta.lifecycleHandlers[
-      LifecycleHandlerType.init
+      LifecycleHandlerType.destroy
     ]) {
       await lifecycleHandler();
     }

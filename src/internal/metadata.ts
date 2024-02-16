@@ -1,7 +1,7 @@
 import { mergeDeep } from './utils';
 
 export class Metadata {
-  METADATA = new Map<any, any>();
+  private METADATA = new Map<any, any>();
 
   private parseArgsWithValue(args: any[]) {
     if (args.length < 2) {
@@ -13,24 +13,8 @@ export class Metadata {
     };
   }
 
-  has(...keysSet: any[]): boolean {
-    let map = this.METADATA;
-
-    for (let i = 0; i < keysSet.length; i++) {
-      const key = keysSet[i];
-
-      if (i === keysSet.length - 1) {
-        return map.has(key);
-      } else {
-        if (map.has(key)) {
-          map = map.get(key);
-        } else {
-          return false;
-        }
-      }
-    }
-
-    return false;
+  get metadata() {
+    return this.METADATA;
   }
 
   set(...args: any[]) {
@@ -85,6 +69,26 @@ export class Metadata {
         }
       }
     }
+  }
+
+  has(...keysSet: any[]): boolean {
+    let map = this.METADATA;
+
+    for (let i = 0; i < keysSet.length; i++) {
+      const key = keysSet[i];
+
+      if (i === keysSet.length - 1) {
+        return map.has(key);
+      } else {
+        if (map.has(key)) {
+          map = map.get(key);
+        } else {
+          return false;
+        }
+      }
+    }
+
+    return false;
   }
 
   get(...keysSet: any[]) {

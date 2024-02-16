@@ -1,8 +1,7 @@
 import type { MiddlewareHandler } from 'hono';
-import { Metadata } from '../internal/metadata';
-import type { ControllerMeta, StandartMethod } from './types';
-
-export const controllersMeta = new Metadata();
+import type { StandartMethod } from './types';
+import { injectableItems } from '../module/internal';
+import { InjectableItemType, type InjectableItemMeta } from '../internal/types';
 
 export function baseHonoMiddlewares(
   middlewares: MiddlewareHandler[],
@@ -11,16 +10,24 @@ export function baseHonoMiddlewares(
 ) {
   if (key) {
     // method decorator
-    controllersMeta.merge(target.constructor, {
-      handlers: {
-        [key]: {
-          middlewares,
+    injectableItems.merge(target.constructor, {
+      types: new Set([InjectableItemType.HonoController]),
+      honoControllerMeta: {
+        handlers: {
+          [key]: {
+            middlewares,
+          },
         },
       },
-    } as ControllerMeta);
+    } as InjectableItemMeta);
   } else {
     // class decorator
-    controllersMeta.merge(target, { middlewares } as ControllerMeta);
+    injectableItems.merge(target, {
+      types: new Set([InjectableItemType.HonoController]),
+      honoControllerMeta: {
+        middlewares,
+      },
+    } as InjectableItemMeta);
   }
 }
 
@@ -29,13 +36,16 @@ export function baseHonoHandlerDecorator(
   path: string = '',
 ) {
   return function (target: Object, key: string) {
-    controllersMeta.merge(target.constructor, {
-      handlers: {
-        [key]: {
-          method,
-          path,
+    injectableItems.merge(target.constructor, {
+      types: new Set([InjectableItemType.HonoController]),
+      honoControllerMeta: {
+        handlers: {
+          [key]: {
+            method,
+            path,
+          },
         },
       },
-    } as ControllerMeta);
+    } as InjectableItemMeta);
   };
 }
