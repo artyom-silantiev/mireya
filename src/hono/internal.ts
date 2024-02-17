@@ -35,7 +35,7 @@ export function baseHonoHandlerDecorator(
   method: StandartMethod | string,
   path: string = '',
 ) {
-  return function (target: Object, key: string) {
+  return function (target: any, key: string) {
     injectableItems.merge(target.constructor, {
       types: new Set([InjectableItemType.HonoController]),
       honoControllerMeta: {

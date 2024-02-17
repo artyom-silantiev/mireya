@@ -2,7 +2,7 @@ import type { MiddlewareHandler } from 'hono';
 import { StandartMethod } from './types';
 import { baseHonoHandlerDecorator, baseHonoMiddlewares } from './internal';
 import { injectableItems } from '../module/internal';
-import { InjectableItemType, type InjectableItemMeta } from '../internal/types';
+import { InjectableItemType } from '../internal/types';
 
 // Controller decorator
 
@@ -10,7 +10,7 @@ export function Controller() {
   return function (target: any) {
     injectableItems.merge(target, {
       types: new Set([InjectableItemType.HonoController]),
-    } as InjectableItemMeta);
+    });
   };
 }
 

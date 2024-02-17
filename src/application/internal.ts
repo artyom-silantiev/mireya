@@ -1,22 +1,22 @@
 import { LifecycleHandlerType } from '../module/types';
-import { appModules, modulesMeta } from '../module/internal';
+import { appModules, injectedServices, modulesMeta } from '../module/internal';
 
 async function beforeExit() {
-  for (const module of appModules) {
-    const moduleMeta = modulesMeta.get(module);
-
-    for (const moduleItem of moduleMeta.items) {
-      if (
-        typeof moduleItem === 'object' &&
-        typeof moduleItem.onModuleDestroy === 'function'
-      ) {
-        await moduleItem.onModuleDestroy();
-      }
+  for (const injectableInstanse of injectedServices.values() as IterableIterator<any>) {
+    if (
+      typeof injectableInstanse === 'object' &&
+      typeof injectableInstanse.onModuleDestroy === 'function'
+    ) {
+      await injectableInstanse.onModuleDestroy();
     }
   }
 
   for (const module of appModules) {
     const moduleMeta = modulesMeta.get(module);
+
+    if (!moduleMeta) {
+      continue;
+    }
 
     for (const lifecycleHandler of moduleMeta.lifecycleHandlers[
       LifecycleHandlerType.destroy

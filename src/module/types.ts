@@ -3,8 +3,6 @@ import type { Module } from '.';
 export type ModuleMeta = {
   id: number;
   module: Module;
-  usedModules: Set<ModuleMeta>;
-  items: Set<any>;
   lifecycleHandlers: {
     [type: string]: LifecycleHandler[];
   };
