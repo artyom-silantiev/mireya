@@ -1,10 +1,10 @@
 import { Hono } from 'hono';
 import { router } from './trpc';
 import { trpcServer } from '@hono/trpc-server';
-import { helloTrpcRouter } from './modules/hello';
+import { HelloModule } from './modules/hello';
 
 const appRouter = router({
-  hello: helloTrpcRouter,
+  hello: HelloModule.trpcRouter,
 });
 export type AppRouter = typeof appRouter;
 

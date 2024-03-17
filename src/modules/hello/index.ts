@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { publicProcedure, router } from '~/trpc';
 
-export const helloTrpcRouter = router({
+const trpcRouter = router({
   // hello method
   hello: publicProcedure.input(z.string().nullish()).query((opts) => {
     const name = opts.input;
@@ -13,3 +13,7 @@ export const helloTrpcRouter = router({
     return '1.0.0';
   }),
 });
+
+export const HelloModule = {
+  trpcRouter,
+};
