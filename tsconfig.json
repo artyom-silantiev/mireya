@@ -21,8 +21,13 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
 
-    /* Decorators */
+    // Decorators
     "emitDecoratorMetadata": true,
-    "experimentalDecorators": true
+    "experimentalDecorators": true,
+
+    // paths
+    "paths": {
+      "~/*": ["./src/*"]
+    }
   }
 }
