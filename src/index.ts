@@ -1,5 +1,5 @@
 import { Hono } from 'hono';
-import { router } from './trpc';
+import { router, createContext } from './trpc';
 import { trpcServer } from '@hono/trpc-server';
 import { HelloModule } from './modules/hello';
 import { UserModule } from './modules/user';
@@ -16,6 +16,7 @@ app.use(
   '/trpc/*',
   trpcServer({
     router: appRouter,
+    createContext,
   }),
 );
 
