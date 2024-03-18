@@ -1,5 +1,5 @@
-import { prisma } from '@db/prisma';
-import { publicProcedure, router } from '@share/trpc';
+import { prisma } from '!db/prisma';
+import { publicProcedure, router } from '!share/trpc';
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
@@ -55,6 +55,6 @@ const trpcRouter = router({
   }),
 });
 
-export const UserModule = {
+export const UserPack = {
   trpcRouter,
 };

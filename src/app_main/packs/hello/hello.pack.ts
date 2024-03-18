@@ -1,4 +1,4 @@
-import { publicProcedure, router } from '@share/trpc';
+import { publicProcedure, router } from '!share/trpc';
 import { z } from 'zod';
 
 const trpcRouter = router({
@@ -14,6 +14,6 @@ const trpcRouter = router({
   }),
 });
 
-export const HelloModule = {
+export const HelloPack = {
   trpcRouter,
 };

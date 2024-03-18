@@ -62,7 +62,7 @@ async function applicationRun() {
     try {
       await handler();
     } catch (e) {
-      console.error('APP DESTROY HANDLER ERROR', e);
+      console.error('APP INIT HANDLER ERROR', e);
     }
   }
 }
