@@ -4,8 +4,8 @@ import * as fs from 'node:fs/promises';
 await fs.rm('./dist', { force: true, recursive: true });
 
 // build bundles
-await Bun.build({
-  entrypoints: ['./src/index.ts'],
+const res = await Bun.build({
+  entrypoints: ['./src/app_main/index.ts'],
   target: 'node',
   outdir: './dist',
 });

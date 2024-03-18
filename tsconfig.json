@@ -27,7 +27,9 @@
 
     // paths
     "paths": {
-      "~/*": ["./src/*"]
+      "@src/*": ["./src/*"],
+      "@db/*": ["./src/lib_db/*"],
+      "@share/*": ["./src/lib_share/*"]
     }
   }
 }

@@ -8,14 +8,19 @@ Mireya - backend app template
 
 To install dependencies:
 
-```bash
+```sh
 bun install
 ```
 
-To run:
+## Run for dev
 
-```bash
-bun run src/index.ts
+```sh
+bun run src/app_main/index.ts
 ```
 
-This project was created using `bun init` in bun v1.0.31. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
+## Production
+
+```sh
+bun build.ts
+bun dist/index.js
+```

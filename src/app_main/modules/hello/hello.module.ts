@@ -1,5 +1,5 @@
+import { publicProcedure, router } from '@share/trpc';
 import { z } from 'zod';
-import { publicProcedure, router } from '~/trpc';
 
 const trpcRouter = router({
   // hello method
