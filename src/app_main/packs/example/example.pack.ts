@@ -1,4 +1,5 @@
-import { HonoPack, type HonoContext } from '!src/lib_share/packs/hono.pack';
+import { HonoPack } from '!src/lib_share/packs/hono.pack';
+import type { Context } from 'hono';
 
 @HonoPack.Controller()
 @HonoPack.Middleware(async (c, next) => {
@@ -23,12 +24,12 @@ class ExampleController {
     await next();
     console.log('Hello after middleware! 4');
   })
-  async hello(c: HonoContext) {
+  async hello(c: Context) {
     return c.text('Hello, from example controller!');
   }
 
-  @HonoPack.Get('/ping')
-  async ping(c: HonoContext) {
+  @HonoPack.On(['GET'], ['/ping'])
+  async ping(c: Context) {
     return c.text('Pong!');
   }
 }

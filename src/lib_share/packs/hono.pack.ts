@@ -1,9 +1,5 @@
-import { type Handler, type MiddlewareHandler, type Context, Hono } from 'hono';
+import { type MiddlewareHandler, Hono } from 'hono';
 import { Metadata } from '../utils/metadata';
-
-export type HonoContext = Context;
-export type HonoHandler = Handler;
-type HonoMiddlewareHandler = MiddlewareHandler;
 
 enum StandartMethod {
   USE = 'USE',
@@ -20,11 +16,11 @@ enum StandartMethod {
 type HonoHandlerMeta = {
   methods?: (StandartMethod | string)[];
   paths?: string[];
-  middlewares?: HonoMiddlewareHandler[];
+  middlewares?: MiddlewareHandler[];
 };
 
 type HonoControllerMeta = {
-  middlewares?: HonoMiddlewareHandler[];
+  middlewares?: MiddlewareHandler[];
   handlers?: { [key: string]: HonoHandlerMeta };
 };
 
