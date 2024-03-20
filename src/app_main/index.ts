@@ -4,6 +4,7 @@ import { HelloPack } from './packs/hello/hello.pack';
 import { UserPack } from './packs/user/user.pack';
 import { router, createContext } from '!share/trpc';
 import { AppLifecycle } from '!src/lib_share/app_lifecycle';
+import { ExamplePack } from './packs/example/example.pack';
 
 const appRouter = router({
   hello: HelloPack.trpcRouter,
@@ -20,6 +21,7 @@ app.use(
     createContext,
   }),
 );
+app.route('/example', ExamplePack.honoRouter);
 
 AppLifecycle.onAppInit(() => {
   console.log('application run');

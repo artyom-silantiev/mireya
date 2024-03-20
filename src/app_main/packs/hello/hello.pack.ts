@@ -17,3 +17,9 @@ const trpcRouter = router({
 export const HelloPack = {
   trpcRouter,
 };
+
+const formSchema = z.object({
+  file: z.instanceof(File),
+});
+
+type X = z.infer<typeof formSchema>;
