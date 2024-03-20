@@ -37,9 +37,6 @@ function baseHonoMiddlewares(
 ) {
   if (key) {
     // method decorator
-
-    console.log('AAA', target.constructor);
-
     honoControllersMeta.merge(target.constructor, {
       handlers: {
         [key]: {
@@ -131,9 +128,7 @@ export const HonoPack = {
 
     // controller decorators
     if (meta.middlewares) {
-      for (const middleware of meta.middlewares) {
-        hono.all(middleware);
-      }
+      hono.all('*', ...meta.middlewares.reverse());
     }
 
     // controller handlers
@@ -144,12 +139,10 @@ export const HonoPack = {
           continue;
         }
 
-        console.log('handler', handler, key);
-
         hono.on(
           handler.methods,
           handler.paths,
-          ...(handler.middlewares ? handler.middlewares : []),
+          ...(handler.middlewares ? handler.middlewares.reverse() : []),
           target[key].bind(target),
         );
       }
