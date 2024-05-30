@@ -1,7 +1,7 @@
 import { publicProcedure, router } from '!share/trpc';
 import { z } from 'zod';
 
-const trpcRouter = router({
+export const HelloTrpc = router({
   // hello method
   hello: publicProcedure.input(z.string().nullish()).query((opts) => {
     const name = opts.input;
@@ -13,7 +13,3 @@ const trpcRouter = router({
     return '1.0.0';
   }),
 });
-
-export const HelloPack = {
-  trpcRouter,
-};

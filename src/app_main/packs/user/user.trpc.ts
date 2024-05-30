@@ -3,7 +3,7 @@ import { publicProcedure, router } from '!share/trpc';
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
-const trpcRouter = router({
+export const UserTrpc = router({
   // clearUsers method
   clearUsers: publicProcedure.query(async () => {
     await prisma.user.deleteMany();
@@ -54,7 +54,3 @@ const trpcRouter = router({
     return await prisma.user.findMany();
   }),
 });
-
-export const UserPack = {
-  trpcRouter,
-};

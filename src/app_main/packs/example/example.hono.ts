@@ -5,7 +5,7 @@ import { createWriteStream } from 'fs';
 import { join } from 'path';
 import { Readable } from 'stream';
 
-const router = new Hono()
+export const ExampleHono = new Hono()
   .get(
     '/hello',
     async (c, next) => {
@@ -45,7 +45,3 @@ const router = new Hono()
       });
     },
   );
-
-export const ExamplePack = {
-  honoRouter: router,
-};

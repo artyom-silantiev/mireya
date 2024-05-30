@@ -1,14 +1,14 @@
 import { Hono } from 'hono';
 import { trpcServer } from '@hono/trpc-server';
-import { HelloPack } from './packs/hello/hello.pack';
-import { UserPack } from './packs/user/user.pack';
+import { HelloTrpc } from './packs/hello/hello.trpc';
+import { UserTrpc } from './packs/user/user.trpc';
 import { router, createContext } from '!share/trpc';
-import { AppLifecycle } from '!src/lib_share/app_lifecycle';
-import { ExamplePack } from './packs/example/example.pack';
+import * as AppLifecycle from '!src/lib_share/app_lifecycle';
+import { ExampleHono } from './packs/example/example.hono';
 
 const trpcRouter = router({
-  hello: HelloPack.trpcRouter,
-  user: UserPack.trpcRouter,
+  hello: HelloTrpc,
+  user: UserTrpc,
 });
 export type TrpcAppRouter = typeof trpcRouter;
 
@@ -20,7 +20,7 @@ const app = new Hono()
       createContext,
     }),
   )
-  .route('/example', ExamplePack.honoRouter);
+  .route('/example', ExampleHono);
 
 export type HonoAppType = typeof app;
 
