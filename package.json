@@ -16,7 +16,6 @@
     "ioredis": "^5.4.1",
     "lodash": "^4.17.21",
     "prisma": "^5.14.0",
-    "reflect-metadata": "^0.2.2",
     "zod": "^3.22.4"
   },
   "devDependencies": {
