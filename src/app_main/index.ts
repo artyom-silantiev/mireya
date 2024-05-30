@@ -6,22 +6,23 @@ import { router, createContext } from '!share/trpc';
 import { AppLifecycle } from '!src/lib_share/app_lifecycle';
 import { ExamplePack } from './packs/example/example.pack';
 
-const appRouter = router({
+const trpcRouter = router({
   hello: HelloPack.trpcRouter,
   user: UserPack.trpcRouter,
 });
-export type AppRouter = typeof appRouter;
+export type TrpcAppRouter = typeof trpcRouter;
 
-const app = new Hono();
+const app = new Hono()
+  .use(
+    '/trpc/*',
+    trpcServer({
+      router: trpcRouter,
+      createContext,
+    }),
+  )
+  .route('/example', ExamplePack.honoRouter);
 
-app.use(
-  '/trpc/*',
-  trpcServer({
-    router: appRouter,
-    createContext,
-  }),
-);
-app.route('/example', ExamplePack.honoRouter);
+export type HonoAppType = typeof app;
 
 AppLifecycle.onAppInit(() => {
   console.log('application run');
