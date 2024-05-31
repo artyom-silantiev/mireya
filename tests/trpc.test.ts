@@ -76,7 +76,7 @@ test('try not found user', async () => {
   }
 });
 
-test('// get user', async () => {
+test('get user', async () => {
   const user = await trpcClient.user.getUser.query({
     id: createdUser1.id,
   });
@@ -106,6 +106,8 @@ test('delete user again', async () => {
   }
 });
 
-afterAll(() => {
+afterAll(async () => {
+  console.log('\n\n afterAll \n\n');
   proc.kill();
+  await Bun.sleep(500);
 });

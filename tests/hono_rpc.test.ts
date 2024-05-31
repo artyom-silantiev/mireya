@@ -58,6 +58,8 @@ test('upload', async () => {
   }
 });
 
-afterAll(() => {
+afterAll(async () => {
+  console.log('\n\n afterAll \n\n');
   proc.kill();
+  await Bun.sleep(500);
 });
