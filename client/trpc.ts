@@ -1,5 +1,5 @@
 import { createTRPCClient, httpBatchLink } from '@trpc/client';
-import type { TrpcAppRouter } from '!src/app_main/index';
+import type { TrpcAppRouter } from '!src/app_main';
 
 const trpcClient = createTRPCClient<TrpcAppRouter>({
   links: [
@@ -32,11 +32,3 @@ console.log('user', user);
 
 const users = await trpcClient.user.getUsers.query();
 console.log('users', users);
-
-try {
-  await trpcClient.user.getUser.query({
-    id: 100404,
-  });
-} catch (error) {
-  // console.log('error', error);
-}

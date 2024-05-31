@@ -15,7 +15,7 @@ bun install
 ## Run for dev
 
 ```sh
-bun run src/app_main/index.ts
+bun run src/app_main/main.ts
 ```
 
 ## Production

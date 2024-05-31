@@ -1,5 +1,5 @@
 import { publicProcedure, router } from '!share/trpc';
-import { prisma } from '!src/lib_db/prisma.module';
+import { prisma } from '!src/lib_db/prisma.pack';
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 

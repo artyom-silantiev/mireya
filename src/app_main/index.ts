@@ -2,8 +2,8 @@ import { Hono } from 'hono';
 import { trpcServer } from '@hono/trpc-server';
 import { router, createContext } from '!share/trpc';
 import * as AppLifecycle from '!src/lib_share/app_lifecycle';
-import { exampleHono } from './modules/example/example.module';
-import { helloTrpc, userTrpc } from './modules/trpc/trpc.module';
+import { exampleHono } from './packs/example/example.pack';
+import { helloTrpc, userTrpc } from './packs/trpc/trpc.pack';
 
 const trpcRouter = router({
   hello: helloTrpc,
