@@ -83,7 +83,7 @@ test('get user', async () => {
   console.log('user', user, '\n');
 });
 
-test('get user', async () => {
+test('get users', async () => {
   const users = await trpcClient.user.getUsers.query();
   console.log('users', users, '\n');
 });
