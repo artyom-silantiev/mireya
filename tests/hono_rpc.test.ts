@@ -1,31 +1,49 @@
 import type { HonoAppType } from '!src/app_main';
 import { hc } from 'hono/client';
 import * as fse from 'fs-extra';
+import { test, beforeAll, afterAll } from 'bun:test';
 
-const client = hc<HonoAppType>('http://localhost:3000/');
+const NODE_PORT = '3555';
+let proc = Bun.spawn(['bun', './src/app_main/index.ts'], {
+  stdin: 'pipe',
+  env: {
+    NODE_PORT,
+  },
+});
+await Bun.sleep(1000);
+const client = hc<HonoAppType>(`http://localhost:${NODE_PORT}/`);
+beforeAll(async () => {
+  console.log();
+  const ws = new WritableStream({
+    write(chunk: Uint8Array) {
+      console.log('\x1b[36m', Buffer.from(chunk).toString('utf8'), '\x1b[0m');
+    },
+  });
+  proc.stdout.pipeTo(ws);
+});
 
-async function callHello() {
+test('hello', async () => {
   const res = await client.example.hello.$get();
 
   if (res.ok) {
     const data = await res.json();
     console.log('callHello res data', data);
   }
-}
+});
 
-async function callPing() {
+test('ping', async () => {
   const res = await client.example.ping.$get();
 
   if (res.ok) {
     const data = await res.json();
     console.log('callPing res data', data);
   }
-}
+});
 
-async function callUpload() {
+test('upload', async () => {
   const fileData = await fse.readFile(__filename);
   const blob = new Blob([fileData]);
-  const file = new File([blob], 'hono_rpc.ts') as string | File;
+  const file = new File([blob], 'hono_rpc.test.ts') as string | File;
 
   const res = await client.example.upload.$post({
     form: {
@@ -38,8 +56,8 @@ async function callUpload() {
     const data = await res.json();
     console.log('callUpload res data', data);
   }
-}
+});
 
-await callHello();
-await callPing();
-await callUpload();
+afterAll(() => {
+  proc.kill();
+});

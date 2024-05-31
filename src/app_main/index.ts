@@ -24,7 +24,7 @@ const app = new Hono()
 export type HonoAppType = typeof app;
 
 AppLifecycle.onAppInit(() => {
-  console.log('application run');
+  console.log('application run', `NODE_PORT=${process.env.NODE_PORT}`);
 });
 AppLifecycle.onAppDestroy(() => {
   console.log('application destroy');

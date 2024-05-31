@@ -18,6 +18,13 @@ bun install
 bun src/app_main/index.ts
 ```
 
+## Tests
+
+```sh
+bun test tests/hono_rpc.test.ts
+bun test tests/trpc.test.ts
+```
+
 ## Production
 
 ```sh
