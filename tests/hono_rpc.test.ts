@@ -23,7 +23,7 @@ beforeAll(async () => {
 });
 
 test('hello', async () => {
-  const res = await client.example.hello.$get();
+  const res = await client.api.hello.$get();
 
   if (res.ok) {
     const data = await res.json();
@@ -32,7 +32,7 @@ test('hello', async () => {
 });
 
 test('ping', async () => {
-  const res = await client.example.ping.$get();
+  const res = await client.api.ping.$get();
 
   if (res.ok) {
     const data = await res.json();
@@ -45,7 +45,7 @@ test('upload', async () => {
   const blob = new Blob([fileData]);
   const file = new File([blob], 'hono_rpc.test.ts') as string | File;
 
-  const res = await client.example.upload.$post({
+  const res = await client.api.upload.$post({
     form: {
       data: Date.now().toString(),
       file,

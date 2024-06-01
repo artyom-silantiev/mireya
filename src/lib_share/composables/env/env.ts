@@ -52,58 +52,9 @@ export class Env {
   NODE_HOST = toString(E.NODE_HOST, 'localhost');
   NODE_PROTOCOL = toEnum(E.NODE_PROTOCOL, Object.values(Protocol), Protocol.http) as Protocol;
 
-  SECRET_PASSWORD_SALT = toString(E.SECRET_PASSWORD_SALT, 'SECRET_PASSWORD_SALT');
-  SECRET_JWT_AUTH = toString(E.SECRET_JWT_AUTH, 'jwtActivationSec');
-  SECRET_JWT_ACTIVATION = toString(E.SECRET_JWT_ACTIVATION, 'jwtActivationSec');
-  SECRET_JWT_RECOVERY = toString(E.JWT_RECOVERY_SECRET, 'jwtUserRecovery');
-
-  JWT_AUTH_TTL_SEC = toInt(E.JWT_AUTH_TTL_SEC, 28800);
-  JWT_ACTIVATION_TTL_SEC = toInt(E.JWT_ACTIVATION_TTL_SEC, 60 * 60 * 24 * 90);
-  JWT_RECOVERY_TTL_SEC = toInt(E.JWT_RECOVERY_TTL_SEC, 60 * 60 * 8);
-
-  DATABASE_URL = toString(E.DATABASE_URL, 'postgresql://postgres:postgres@localhost:5432/postgres?schema=public');
-
-  POSTGRES_HOST = toString(E.POSTGRES_HOST, 'tmp-cool-db');
-  POSTGRES_DB = toString(E.POSTGRES_DB, 'appdb');
-  POSTGRES_USER = toString(E.POSTGRES_USER, 'postgres');
-  POSTGRES_PASSWORD = toString(E.POSTGRES_PASSWORD, 'postgres');
-
-  DIR_DATA = toPath(E.DIR_DATA, './data');
-  DIR_TEMP = toPath(E.DIR_TEMP, './temp');
-  DIR_BACKUPS = toPath(E.DIR_BACKUPS, './backups');
-  DIR_FRONT_APP_MAIN = toPath(E.DIR_FRONT_APP_MAIN, './data/frontends/main');
-  DIR_ASSETS_PUBLIC = toPath(E.DIR_ASSETS_PUBLIC, './assets/public');
-
-  FRONT_MAIN_PROTOCOL = toEnum(E.FRONT_MAIN_PROTOCOL, Object.values(Protocol), Protocol.http) as Protocol;
-  FRONT_MAIN_HOST = toString(E.FRONT_MAIN_HOST, 'example.com');
-  FRONT_HIGHWINDS_HOST = toString(E.FRONT_HIGHWINDS_HOST, 'highwinds-dev.jesusstream.com');
-  FRONT_BASE_URL = toString(E.FRONT_BASE_URL, 'http://localhost:3000');
-
   REDIS_HOST = toString(E.REDIS_HOST, 'localhost');
   REDIS_PORT = toInt(E.REDIS_PORT, 6379);
   REDIS_DB = toInt(E.REDIS_DB, 0);
-
-  MAILER_SEND_EMAIL_TYPE = toEnum(E.MAILER_SEND_EMAIL_TYPE, Object.values(SendEmailType), SendEmailType.sync) as SendEmailType;
-  MAILER_QUEUE_DELAY_SEC = toInt(E.MAILER_QUEUE_DELAY_SEC, 10);
-  MAILER_QUEUE_ATTEMPTS = toInt(E.MAILER_QUEUE_ATTEMPTS, 3);
-  MAILER_QUEUE_PACK_SIZE = toInt(E.MAILER_QUEUE_PACK_SIZE, 3);
-  MAILER_DEFAULT_SENDER = toString(E.MAILER_DEFAULT_SENDER, 'No remply <noreply-dev@site.local>');
-  MAILER_SMTP_HOST = toString(E.MAILER_SMTP_HOST, 'localhost');
-  MAILER_SMTP_PORT = toInt(E.MAILER_SMTP_PORT, 1025);
-  MAILER_SMTP_ENCRYPTION = toString(E.MAILER_SMTP_IS_SECURE, 'tls');
-  MAILER_SMTP_AUTH_USER = toString(E.MAILER_SMTP_AUTH_USER, '');
-  MAILER_SMTP_AUTH_PASS = toString(E.MAILER_SMTP_AUTH_PASS, '');
-
-  // LOCAL_FILES
-  LOCAL_FILES_CACHE_MIN_THUMB_LOG_SIZE = toInt(E.LOCAL_FILES_CACHE_MIN_THUMB_LOG_SIZE, 5);
-  LOCAL_FILES_IMAGE_MAX_SIZE = toInt(E.LOCAL_FILES_IMAGE_MAX_SIZE, 1024 * 1024 * 8); // 8mb
-  LOCAL_FILES_ALLOW_MIME_TYPES = toArrayStrings(E.LOCAL_FILES_ALLOW_MIME_TYPES, ',', ['image/jpeg', 'image/png']);
-  LOCAL_FILES_AUDIO_MAX_SIZE = toInt(E.LOCAL_FILES_AUDIO_MAX_SIZE, 1024 * 1024 * 20); // 20mb
-  LOCAL_FILES_AUDIO_ALLOW_MIME_TYPES = toArrayStrings(E.LOCAL_FILES_AUDIO_ALLOW_MIME_TYPES, ',', ['audio/mp3']);
-  LOCAL_FILES_VIDEO_MAX_SIZE = toInt(E.LOCAL_FILES_VIDEO_MAX_SIZE, 1024 * 1024 * 20); // 20mb
-  LOCAL_FILES_VIDEO_ALLOW_MIME_TYPES = toArrayStrings(E.LOCAL_FILES_VIDEO_ALLOW_MIME_TYPES, ',', ['video/mp4']);
-
-  DAEMON_CLEAN_DB_DELAY_MIN = toInt(E.DAEMON_CLEAN_DB_DELAY_MIN, 60);
 
   isDevEnv() {
     return this.NODE_ENV === NodeEnvType.development;

@@ -4,12 +4,20 @@
 
 Mireya - backend app template
 
+## Bun
+
 ## Install
 
 To install dependencies:
 
 ```sh
 bun install
+```
+
+## Create DB for dev
+
+```sh
+bun prisma migrate dev
 ```
 
 ## Run for dev
