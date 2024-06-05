@@ -22,7 +22,7 @@ export function createUserTrpc() {
           password: z.string(),
         }),
       )
-      .query(async (opts) => {
+      .mutation(async (opts) => {
         const input = opts.input;
         const hash = await bcrypt.hash(input.password);
         const createdUser = prisma.user.create({
@@ -44,7 +44,7 @@ export function createUserTrpc() {
           password: z.string(),
         }),
       )
-      .query(async (opts) => {
+      .mutation(async (opts) => {
         const user = await prisma.user.findUnique({
           where: {
             email: opts.input.email,
@@ -112,7 +112,7 @@ export function createUserTrpc() {
           id: z.number(),
         }),
       )
-      .query(async (opts) => {
+      .mutation(async (opts) => {
         const user = await prisma.user.findUnique({
           where: {
             id: opts.input.id,

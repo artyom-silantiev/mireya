@@ -38,7 +38,7 @@ test('clear users', async () => {
 
 let createdUser1 = null as null | any;
 test('create user', async () => {
-  createdUser1 = await trpcClient.user.createUser.query({
+  createdUser1 = await trpcClient.user.createUser.mutate({
     name: 'Bob',
     email: 'example1@example.com',
     password: 'bob_password_1',
@@ -47,7 +47,7 @@ test('create user', async () => {
 });
 
 test('user login', async () => {
-  const loginResult = await trpcClient.user.userLogin.query({
+  const loginResult = await trpcClient.user.userLogin.mutate({
     email: 'example1@example.com',
     password: 'bob_password_1',
   });
@@ -56,7 +56,7 @@ test('user login', async () => {
 
 test('try bad login', async () => {
   try {
-    await trpcClient.user.userLogin.query({
+    await trpcClient.user.userLogin.mutate({
       email: 'example1@example.com',
       password: 'not_bob_password',
     });
@@ -67,7 +67,7 @@ test('try bad login', async () => {
 
 test('try not found user', async () => {
   try {
-    await trpcClient.user.userLogin.query({
+    await trpcClient.user.userLogin.mutate({
       email: 'not_found_bob@example.com',
       password: 'not_bob_password',
     });
@@ -89,7 +89,7 @@ test('get users', async () => {
 });
 
 test('delete user', async () => {
-  const deleteUserMsg = await trpcClient.user.deleteUser.query({
+  const deleteUserMsg = await trpcClient.user.deleteUser.mutate({
     id: createdUser1.id,
   });
   console.log('deleteUserMsg', deleteUserMsg, '\n');
@@ -97,7 +97,7 @@ test('delete user', async () => {
 
 test('delete user again', async () => {
   try {
-    const deleteUserMsg = await trpcClient.user.deleteUser.query({
+    const deleteUserMsg = await trpcClient.user.deleteUser.mutate({
       id: createdUser1.id,
     });
     console.log('deleteUserMsg', deleteUserMsg, '\n');
