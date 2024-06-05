@@ -4,8 +4,6 @@
 
 Mireya - backend app template
 
-## Bun
-
 ## Install
 
 To install dependencies:
