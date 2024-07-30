@@ -17,21 +17,36 @@ let proc = Bun.spawn(['bun', './src/app_main/index.ts'], {
   },
 });
 
-await Bun.sleep(1000);
 const url = `http://localhost:${NODE_PORT}/trpc`;
-const trpcClient = createTRPCClient<TrpcAppRouter>({
-  links: [
-    splitLink({
-      condition: (op) => isNonJsonSerializable(op.input),
-      true: httpLink({
-        url,
+function createTrcpClient(token?: string) {
+  const headers = token
+    ? {
+        authorization: `Bearer ${token}`,
+      }
+    : undefined;
+
+  const trpcClient = createTRPCClient<TrpcAppRouter>({
+    links: [
+      splitLink({
+        condition: (op) => isNonJsonSerializable(op.input),
+        true: httpLink({
+          url,
+          headers,
+        }),
+        false: httpBatchLink({
+          url,
+          headers,
+        }),
       }),
-      false: httpBatchLink({
-        url,
-      }),
-    }),
-  ],
-});
+    ],
+  });
+
+  return trpcClient;
+}
+
+await Bun.sleep(1000);
+const trpcClient = createTrcpClient();
+
 beforeAll(async () => {
   console.log();
   const ws = new WritableStream({
@@ -75,12 +90,29 @@ test('create user', async () => {
   console.log('createdUser', createdUser1, '\n');
 });
 
+let authToken = '';
 test('user login', async () => {
   const loginResult = await trpcClient.user.userLogin.mutate({
     email: 'example1@example.com',
     password: 'bob_password_1',
   });
+  authToken = loginResult.token;
   console.log('loginResult', loginResult, '\n');
+});
+
+test('get user private data', async () => {
+  const authedTrcpClient = createTrcpClient(authToken);
+  const userPrivateDataRes =
+    await authedTrcpClient.user.getUserPrivateData.query();
+  console.log('userPrivateDataRes', userPrivateDataRes);
+});
+
+test('try get user private data', async () => {
+  try {
+    await trpcClient.user.getUserPrivateData.query();
+  } catch (err) {
+    console.log('err', err);
+  }
 });
 
 test('try bad login', async () => {

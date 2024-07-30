@@ -1,7 +1,17 @@
 import { initTRPC } from '@trpc/server';
+import { verifyToken, type JtwUserPayload } from './packs/jwt/jwt.pack';
 
-export async function createContext(c: { req: Request }) {
-  return { v: 1 };
+export async function createContext(ctx: { req: Request }) {
+  let user = null as JtwUserPayload | null;
+
+  let authorizationHeader = ctx.req.headers.get('authorization');
+  if (authorizationHeader) {
+    const token = authorizationHeader.split(' ')[1] as string;
+    const payload = await verifyToken(token);
+    user = payload;
+  }
+
+  return { user };
 }
 export type Context = Awaited<ReturnType<typeof createContext>>;
 

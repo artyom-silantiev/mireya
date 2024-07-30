@@ -1,11 +1,31 @@
 import { publicProcedure, router } from '!share/trpc';
-import { prisma } from '!src/lib_db/prisma.pack';
 import { useBcrypt } from '!src/lib_share/composables/bcrypt';
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
+import { usePrisma } from '!src/lib_db/prisma.pack';
+import { createToken } from '!src/lib_share/packs/jwt/jwt.pack';
 
 export function createUserTrpc() {
+  const prisma = usePrisma();
   const bcrypt = useBcrypt();
+
+  const protectedProducedure = publicProcedure.use(
+    async function isAuthed(opts) {
+      const { ctx } = opts;
+      // `ctx.user` is nullable
+      if (!ctx.user) {
+        //     ^?
+        throw new TRPCError({ code: 'UNAUTHORIZED' });
+      }
+      return opts.next({
+        ctx: {
+          // ✅ user value is known to be non-null now
+          user: ctx.user,
+          // ^?
+        },
+      });
+    },
+  );
 
   return router({
     // clearUsers method
@@ -64,9 +84,11 @@ export function createUserTrpc() {
         );
 
         if (compareResult) {
+          const token = createToken(user.id.toString());
+
           return {
             message: 'ok',
-            token: (Math.random() * 1e16 + 1e16).toString(16),
+            token: token,
           };
         } else {
           throw new TRPCError({
@@ -99,6 +121,10 @@ export function createUserTrpc() {
 
         return user;
       }),
+
+    getUserPrivateData: protectedProducedure.query(({ ctx }) => {
+      return ctx.user;
+    }),
 
     // getUsers method
     getUsers: publicProcedure.query(async () => {

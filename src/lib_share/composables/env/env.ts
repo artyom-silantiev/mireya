@@ -51,6 +51,8 @@ export class Env {
   NODE_HOST = toString(E.NODE_HOST, 'localhost');
   NODE_PROTOCOL = toEnum(E.NODE_PROTOCOL, Object.values(Protocol), Protocol.http) as Protocol;
 
+  JWT_SECRET_USER_LOGIN = toString(E.JWT_SECRET_USER_LOGIN, 'JWT_SECRET_USER_LOGIN');
+
   REDIS_HOST = toString(E.REDIS_HOST, 'localhost');
   REDIS_PORT = toInt(E.REDIS_PORT, 6379);
   REDIS_DB = toInt(E.REDIS_DB, 0);
