@@ -1,6 +1,13 @@
-import { createTRPCClient, httpBatchLink } from '@trpc/client';
+import {
+  createTRPCClient,
+  httpBatchLink,
+  httpLink,
+  isNonJsonSerializable,
+  splitLink,
+} from '@trpc/client';
 import type { TrpcAppRouter } from '!src/app_main';
 import { test, beforeAll, afterAll } from 'bun:test';
+import * as fse from 'fs-extra';
 
 const NODE_PORT = '3555';
 let proc = Bun.spawn(['bun', './src/app_main/index.ts'], {
@@ -9,11 +16,19 @@ let proc = Bun.spawn(['bun', './src/app_main/index.ts'], {
     NODE_PORT,
   },
 });
+
 await Bun.sleep(1000);
+const url = `http://localhost:${NODE_PORT}/trpc`;
 const trpcClient = createTRPCClient<TrpcAppRouter>({
   links: [
-    httpBatchLink({
-      url: `http://localhost:${NODE_PORT}/trpc`,
+    splitLink({
+      condition: (op) => isNonJsonSerializable(op.input),
+      true: httpLink({
+        url,
+      }),
+      false: httpBatchLink({
+        url,
+      }),
     }),
   ],
 });
@@ -30,6 +45,20 @@ beforeAll(async () => {
 test('hello bob', async () => {
   const helloRes = await trpcClient.hello.hello.query('Bob');
   console.log(helloRes);
+});
+
+test('hello uploadFile', async () => {
+  const fileData = await fse.readFile(__filename);
+  const blob = new Blob([fileData]);
+  const file = new File([blob], 'trpc.test.ts') as File;
+
+  const formData = new FormData();
+  formData.set('title', 'trpc.test.ts');
+  formData.set('file', file);
+
+  const uploadFileRes = await trpcClient.hello.uploadFile.mutate(formData);
+
+  console.log(uploadFileRes);
 });
 
 test('clear users', async () => {

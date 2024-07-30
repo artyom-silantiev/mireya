@@ -1,6 +1,5 @@
 import * as dotenv from 'dotenv';
 import * as path from 'path';
-import * as _ from 'lodash';
 import * as fs from 'fs-extra';
 import { shSync } from '../sh';
 
@@ -150,9 +149,9 @@ export function toArrayStrings(envParam: string | undefined, spliter: string, de
 }
 
 export function _parsePath(pathParam: string) {
-  if (_.startsWith(pathParam, './') || _.startsWith(pathParam, '../')) {
+  if (pathParam.startsWith('./') || pathParam.startsWith('../')) {
     return path.resolve(process.cwd(), pathParam);
-  } else if (_.startsWith(pathParam, '/')) {
+  } else if (pathParam.startsWith('/')) {
     return pathParam;
   } else {
     return null;

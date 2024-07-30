@@ -7,27 +7,26 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
-    "@hono/trpc-server": "^0.3.1",
+    "@hono/trpc-server": "^0.3.2",
     "@hono/zod-validator": "^0.2.2",
-    "@prisma/client": "5.14.0",
+    "@prisma/client": "5.17.0",
     "@trpc/server": "next",
     "dotenv": "^16.4.5",
     "fs-extra": "^11.2.0",
-    "hono": "^4.4.3",
+    "hono": "^4.5.3",
     "ioredis": "^5.4.1",
-    "lodash": "^4.17.21",
-    "prisma": "^5.15.0",
-    "zod": "^3.23.8"
+    "prisma": "^5.17.0",
+    "zod": "^3.23.8",
+    "zod-form-data": "^2.0.2"
   },
   "devDependencies": {
     "@trpc/client": "next",
     "@types/bun": "latest",
     "@types/fs-extra": "^11.0.4",
-    "@types/lodash": "^4.17.4",
-    "@types/node": "^20.14.2",
-    "prettier": "^3.3.1",
+    "@types/node": "^20.14.13",
+    "prettier": "^3.3.3",
     "ts-node": "^10.9.2",
-    "typescript": "^5.4.5"
+    "typescript": "^5.5.4"
   },
   "keywords": [
     "backend",
