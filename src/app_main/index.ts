@@ -6,6 +6,7 @@ import { exampleHono } from './packs/example/example.pack';
 import { helloTrpc, userTrpc } from './packs/trpc/trpc.pack';
 import { serveStatic } from 'hono/bun';
 import { useEnv } from '!src/lib_share/composables/env/env';
+import fsExtra from 'fs-extra/esm';
 
 const trpcRouter = router({
   hello: helloTrpc,
@@ -31,8 +32,11 @@ const app = new Hono()
 
 export type HonoAppType = typeof app;
 
-AppLifecycle.onAppInit(() => {
-  console.log(useEnv());
+AppLifecycle.onAppInit(async () => {
+  const env = useEnv();
+  await fsExtra.mkdirs(env.DIR_TEMP);
+
+  console.log(env);
   console.log('application run');
 });
 AppLifecycle.onAppDestroy(() => {
