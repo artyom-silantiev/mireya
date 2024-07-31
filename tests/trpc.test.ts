@@ -45,7 +45,7 @@ beforeAll(async () => {
 });
 
 test('hello bob', async () => {
-  const helloRes = await trpcClient.hello.hello.query('Bob');
+  const helloRes = await trpcClient.example.hello.query('Bob');
   console.log(helloRes);
 });
 
@@ -58,18 +58,18 @@ test('hello uploadFile', async () => {
   formData.set('title', 'trpc.test.ts');
   formData.set('file', file);
 
-  const uploadFileRes = await trpcClient.hello.uploadFile.mutate(formData);
+  const uploadFileRes = await trpcClient.example.uploadFile.mutate(formData);
 
   console.log(uploadFileRes);
 });
 
 test('clear users', async () => {
-  await trpcClient.user.clearUsers.query();
+  await trpcClient.example.clearUsers.query();
 });
 
 let createdUser1 = null as null | any;
 test('create user', async () => {
-  createdUser1 = await trpcClient.user.createUser.mutate({
+  createdUser1 = await trpcClient.example.createUser.mutate({
     name: 'Bob',
     email: 'example1@example.com',
     password: 'bob_password_1',
@@ -79,7 +79,7 @@ test('create user', async () => {
 
 let authToken = '';
 test('user login', async () => {
-  const loginResult = await trpcClient.user.userLogin.mutate({
+  const loginResult = await trpcClient.guest.userLogin.mutate({
     email: 'example1@example.com',
     password: 'bob_password_1',
   });
@@ -87,24 +87,9 @@ test('user login', async () => {
   console.log('loginResult', loginResult, '\n');
 });
 
-test('get user private data', async () => {
-  const authedTrcpClient = createTrcpClient(authToken);
-  const userPrivateDataRes =
-    await authedTrcpClient.user.getUserPrivateData.query();
-  console.log('userPrivateDataRes', userPrivateDataRes);
-});
-
-test('try get user private data', async () => {
-  try {
-    await trpcClient.user.getUserPrivateData.query();
-  } catch (err) {
-    console.log('err', err);
-  }
-});
-
 test('try bad login', async () => {
   try {
-    await trpcClient.user.userLogin.mutate({
+    await trpcClient.guest.userLogin.mutate({
       email: 'example1@example.com',
       password: 'not_bob_password',
     });
@@ -113,9 +98,9 @@ test('try bad login', async () => {
   }
 });
 
-test('try not found user', async () => {
+test('try not found user login', async () => {
   try {
-    await trpcClient.user.userLogin.mutate({
+    await trpcClient.guest.userLogin.mutate({
       email: 'not_found_bob@example.com',
       password: 'not_bob_password',
     });
@@ -124,20 +109,34 @@ test('try not found user', async () => {
   }
 });
 
+test('get user private data', async () => {
+  const authedTrcpClient = createTrcpClient(authToken);
+  const userPrivateDataRes = await authedTrcpClient.user.getInfo.query();
+  console.log('userPrivateDataRes', userPrivateDataRes);
+});
+
+test('try get user private data', async () => {
+  try {
+    await trpcClient.user.getInfo.query();
+  } catch (err) {
+    console.log('err', err);
+  }
+});
+
 test('get user', async () => {
-  const user = await trpcClient.user.getUser.query({
+  const user = await trpcClient.example.getUser.query({
     id: createdUser1.id,
   });
   console.log('user', user, '\n');
 });
 
 test('get users', async () => {
-  const users = await trpcClient.user.getUsers.query();
+  const users = await trpcClient.example.getUsers.query();
   console.log('users', users, '\n');
 });
 
 test('delete user', async () => {
-  const deleteUserMsg = await trpcClient.user.deleteUser.mutate({
+  const deleteUserMsg = await trpcClient.example.deleteUser.mutate({
     id: createdUser1.id,
   });
   console.log('deleteUserMsg', deleteUserMsg, '\n');
@@ -145,7 +144,7 @@ test('delete user', async () => {
 
 test('delete user again', async () => {
   try {
-    const deleteUserMsg = await trpcClient.user.deleteUser.mutate({
+    const deleteUserMsg = await trpcClient.example.deleteUser.mutate({
       id: createdUser1.id,
     });
     console.log('deleteUserMsg', deleteUserMsg, '\n');
@@ -154,7 +153,4 @@ test('delete user again', async () => {
   }
 });
 
-afterAll(async () => {
-  console.log('\n\n afterAll \n\n');
-  await Bun.sleep(500);
-});
+afterAll(async () => {});

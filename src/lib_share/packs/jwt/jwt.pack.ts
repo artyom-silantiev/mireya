@@ -1,7 +1,11 @@
 import { useEnv } from '!src/lib_share/composables/env/env';
 import jwt from 'jsonwebtoken';
 
-export type JtwUserPayload = { userId: string };
+export type JtwUserPayloadData = { userId: string };
+
+export class JtwUserPayload {
+  constructor(public userId: bigint) {}
+}
 
 const env = useEnv();
 
@@ -20,14 +24,17 @@ export function createToken(userId: string) {
 }
 
 export async function verifyToken(token: string) {
-  const payload = await new Promise<JtwUserPayload>((resolve, reject) => {
+  const payload = await new Promise<JtwUserPayloadData>((resolve, reject) => {
     jwt.verify(token, env.JWT_SECRET_USER_LOGIN, (err, data) => {
       if (err) {
         reject(err);
       } else {
-        resolve(data as JtwUserPayload);
+        resolve(data as JtwUserPayloadData);
       }
     });
   });
-  return payload;
+
+  const jtwUserPayload = new JtwUserPayload(BigInt(payload.userId));
+
+  return jtwUserPayload;
 }

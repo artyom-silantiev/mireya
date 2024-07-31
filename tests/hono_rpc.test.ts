@@ -52,6 +52,4 @@ test('upload', async () => {
   }
 });
 
-afterAll(async () => {
-  console.log('\n\n afterAll \n\n');
-});
+afterAll(async () => {});

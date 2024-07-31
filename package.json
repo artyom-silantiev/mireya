@@ -3,6 +3,10 @@
   "version": "0.1.0",
   "description": "Backend app template",
   "type": "module",
+  "scripts": {
+    "dev": "bun --watch src/app_main/index.ts",
+    "tests": "bun test ./tests/*.test.ts"
+  },
   "peerDependencies": {
     "typescript": "^5.0.0"
   },

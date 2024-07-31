@@ -14,7 +14,7 @@ datasource db {
 }
 
 model User {
-  id            Int     @id @default(autoincrement())
+  id            BigInt  @id @default(autoincrement())
   passwordHash  String
   email         String  @unique
   name          String?
@@ -23,11 +23,11 @@ model User {
 
 
 model Post {
-  id        Int     @id @default(autoincrement())
+  id        BigInt  @id @default(autoincrement())
   title     String
   content   String?
   published Boolean @default(false)
 
-  authorId  Int
+  authorId  BigInt
   author    User    @relation(fields: [authorId], references: [id])
 }
