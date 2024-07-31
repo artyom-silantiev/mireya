@@ -3,14 +3,8 @@ import { hc } from 'hono/client';
 import * as fse from 'fs-extra';
 import { test, beforeAll, afterAll } from 'bun:test';
 
-const NODE_PORT = '3555';
-let proc = Bun.spawn(['bun', './src/app_main/index.ts'], {
-  stdin: 'pipe',
-  env: {
-    NODE_PORT,
-  },
-});
-await Bun.sleep(1000);
+const NODE_PORT = '3000';
+
 const client = hc<HonoAppType>(`http://localhost:${NODE_PORT}/`);
 beforeAll(async () => {
   console.log();
@@ -19,7 +13,7 @@ beforeAll(async () => {
       console.log('\x1b[36m', Buffer.from(chunk).toString('utf8'), '\x1b[0m');
     },
   });
-  proc.stdout.pipeTo(ws);
+  // proc.stdout.pipeTo(ws);
 });
 
 test('hello', async () => {
@@ -60,6 +54,4 @@ test('upload', async () => {
 
 afterAll(async () => {
   console.log('\n\n afterAll \n\n');
-  proc.kill();
-  await Bun.sleep(500);
 });

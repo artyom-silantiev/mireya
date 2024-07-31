@@ -9,14 +9,7 @@ import type { TrpcAppRouter } from '!src/app_main';
 import { test, beforeAll, afterAll } from 'bun:test';
 import * as fse from 'fs-extra';
 
-const NODE_PORT = '3555';
-let proc = Bun.spawn(['bun', './src/app_main/index.ts'], {
-  stdin: 'pipe',
-  env: {
-    NODE_PORT,
-  },
-});
-
+const NODE_PORT = '3000';
 const url = `http://localhost:${NODE_PORT}/trpc`;
 function createTrcpClient(token?: string) {
   const headers = token
@@ -49,12 +42,6 @@ const trpcClient = createTrcpClient();
 
 beforeAll(async () => {
   console.log();
-  const ws = new WritableStream({
-    write(chunk: Uint8Array) {
-      console.log('\x1b[36m', Buffer.from(chunk).toString('utf8'), '\x1b[0m');
-    },
-  });
-  proc.stdout.pipeTo(ws);
 });
 
 test('hello bob', async () => {
@@ -169,6 +156,5 @@ test('delete user again', async () => {
 
 afterAll(async () => {
   console.log('\n\n afterAll \n\n');
-  proc.kill();
   await Bun.sleep(500);
 });

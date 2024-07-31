@@ -1,0 +1,21 @@
+services:
+  db:
+    container_name: postgres
+    image: 'postgres'
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    logging:
+      options:
+        max-size: 10m
+        max-file: '3'
+    ports:
+      - '5432:5432'
+
+  redis:
+    container_name: redis
+    image: redis
+    ports:
+      - '6379:6379'
+    restart: always

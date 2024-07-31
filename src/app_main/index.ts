@@ -14,6 +14,7 @@ const trpcRouter = router({
 export type TrpcAppRouter = typeof trpcRouter;
 
 const app = new Hono()
+  .route('/api', exampleHono)
   .use(
     '/trpc/*',
     trpcServer({
@@ -21,7 +22,6 @@ const app = new Hono()
       createContext,
     }),
   )
-  .route('/api', exampleHono)
   .use(
     '*',
     serveStatic({
