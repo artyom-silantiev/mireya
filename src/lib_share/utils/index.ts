@@ -8,11 +8,11 @@ type PropertiesBigIntToString<T> = {
   [K in keyof T]: BigIntToString<T[K]>;
 };
 
-type ObjK<T> = {
-  [K in keyof T]: any;
-};
-
-export function serializeBigIntInObject<T extends ObjK<T>>(obj: T) {
+export function serializeBigIntInObject<
+  T extends {
+    [K in keyof T]: any;
+  },
+>(obj: T) {
   for (const key in obj) {
     if (typeof obj[key] === 'bigint') {
       obj[key] = obj[key].toString();
@@ -21,7 +21,5 @@ export function serializeBigIntInObject<T extends ObjK<T>>(obj: T) {
       (obj[key] as any) = tmp;
     }
   }
-
-  const tmpObj = obj as PropertiesBigIntToString<T>;
-  return tmpObj;
+  return obj as PropertiesBigIntToString<T>;
 }
