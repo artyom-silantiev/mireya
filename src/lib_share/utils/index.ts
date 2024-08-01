@@ -8,7 +8,7 @@ type PropertiesBigIntToString<T> = {
   [K in keyof T]: BigIntToString<T[K]>;
 };
 
-export function serializeBigIntInObject<
+export function serializePrismaDataForJson<
   T extends {
     [K in keyof T]: any;
   },
@@ -17,8 +17,7 @@ export function serializeBigIntInObject<
     if (typeof obj[key] === 'bigint') {
       obj[key] = obj[key].toString();
     } else if (typeof obj[key] === 'object') {
-      const tmp = serializeBigIntInObject(obj[key]);
-      (obj[key] as any) = tmp;
+      (obj[key] as any) = serializePrismaDataForJson(obj[key]);
     }
   }
   return obj as PropertiesBigIntToString<T>;

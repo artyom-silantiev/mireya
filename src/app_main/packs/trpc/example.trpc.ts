@@ -6,7 +6,7 @@ import { zodFormDataOrObject } from '!src/lib_share/utils/trpc';
 import { TRPCError } from '@trpc/server';
 import { usePrisma } from '!src/lib_db/prisma.pack';
 import { useBcrypt } from '!src/lib_share/composables/bcrypt';
-import { serializeBigIntInObject } from '!src/lib_share/utils';
+import { serializePrismaDataForJson } from '!src/lib_share/utils';
 
 export function createExampleTrpc(exampleService: ExampleService) {
   const prisma = usePrisma();
@@ -80,7 +80,7 @@ export function createExampleTrpc(exampleService: ExampleService) {
           },
         });
 
-        return serializeBigIntInObject(user);
+        return serializePrismaDataForJson(user);
       }),
 
     getUser: publicProcedure
@@ -103,12 +103,12 @@ export function createExampleTrpc(exampleService: ExampleService) {
           });
         }
 
-        return serializeBigIntInObject(user);
+        return serializePrismaDataForJson(user);
       }),
 
     getUsers: publicProcedure.query(async () => {
       const users = await prisma.user.findMany();
-      return users.map((x) => serializeBigIntInObject(x));
+      return users.map((x) => serializePrismaDataForJson(x));
     }),
 
     deleteUser: publicProcedure

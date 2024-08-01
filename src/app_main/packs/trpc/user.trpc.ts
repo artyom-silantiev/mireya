@@ -1,7 +1,7 @@
 import { publicProcedure, router } from '!share/trpc';
 import { TRPCError } from '@trpc/server';
 import { usePrisma } from '!src/lib_db/prisma.pack';
-import { serializeBigIntInObject } from '!src/lib_share/utils';
+import { serializePrismaDataForJson } from '!src/lib_share/utils';
 
 export function createUserTrpc() {
   const prisma = usePrisma();
@@ -35,7 +35,7 @@ export function createUserTrpc() {
         },
       });
 
-      return serializeBigIntInObject(user);
+      return serializePrismaDataForJson(user);
     }),
   });
 }
