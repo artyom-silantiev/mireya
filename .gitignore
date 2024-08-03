@@ -1,5 +1,6 @@
 work
 temp
+data
 prisma/dev.db
 prisma/dev.db-journal
 

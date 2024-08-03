@@ -5,7 +5,7 @@ import {
   isNonJsonSerializable,
   splitLink,
 } from '@trpc/client';
-import type { TrpcAppRouter } from '~/app_main';
+import type { TrpcAppRouter } from '~/entry';
 import { test, beforeAll, afterAll } from 'bun:test';
 import * as fse from 'fs-extra';
 

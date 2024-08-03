@@ -1,11 +1,13 @@
-type BigIntToString<T> = T extends BigInt
+type PrismaDataToJson<T> = T extends BigInt
   ? string
-  : T extends object
-    ? PropertiesBigIntToString<T>
-    : T;
+  : T extends Date
+    ? string
+    : T extends object
+      ? PropertiesPrismaDataToJson<T>
+      : T;
 
-type PropertiesBigIntToString<T> = {
-  [K in keyof T]: BigIntToString<T[K]>;
+type PropertiesPrismaDataToJson<T> = {
+  [K in keyof T]: PrismaDataToJson<T[K]>;
 };
 
 export function serializePrismaDataForJson<
@@ -20,5 +22,5 @@ export function serializePrismaDataForJson<
       (obj[key] as any) = serializePrismaDataForJson(obj[key]);
     }
   }
-  return obj as PropertiesBigIntToString<T>;
+  return obj as PropertiesPrismaDataToJson<T>;
 }

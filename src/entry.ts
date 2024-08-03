@@ -11,16 +11,19 @@ import {
 import { serveStatic } from 'hono/bun';
 import { useEnv } from '~/lib/env/env';
 import fsExtra from 'fs-extra/esm';
+import { filesHone, filesTrpc } from './packs/files/files.pack';
 
 const trpcRouter = router({
   example: exampleTrpc,
   user: userTrpc,
   guest: guestTrpc,
+  files: filesTrpc,
 });
 export type TrpcAppRouter = typeof trpcRouter;
 
 const app = new Hono()
   .route('/api', exampleHono)
+  .route('/files', filesHone)
   .use(
     '/trpc/*',
     trpcServer({
@@ -39,6 +42,7 @@ export type HonoAppType = typeof app;
 
 AppLifecycle.onAppInit(async () => {
   const env = useEnv();
+  await fsExtra.mkdirs(env.DIR_DATA);
   await fsExtra.mkdirs(env.DIR_TEMP);
 
   console.log(env);

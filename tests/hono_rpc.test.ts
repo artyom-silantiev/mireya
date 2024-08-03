@@ -1,4 +1,4 @@
-import type { HonoAppType } from '~/app_main';
+import type { HonoAppType } from '~/entry';
 import { hc } from 'hono/client';
 import * as fse from 'fs-extra';
 import { test, beforeAll, afterAll } from 'bun:test';

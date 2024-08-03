@@ -18,16 +18,48 @@ model User {
   passwordHash  String
   email         String  @unique
   name          String?
-  posts         Post[]
+  imageId       BigInt?
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  image         DbFileRef? @relation(fields: [imageId], references: [id])
 }
 
+model DbFileRef {
+  id          BigInt       @id @default(autoincrement())
+  uid         String       @unique @db.VarChar(24)
+  fileId      BigInt 
 
-model Post {
-  id        BigInt  @id @default(autoincrement())
-  title     String
-  content   String?
-  published Boolean @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
-  authorId  BigInt
-  author    User    @relation(fields: [authorId], references: [id])
+  users       User[]
+  file DbFile   @relation(fields: [fileId], references: [id])
+}
+
+enum MediaType {
+  OTHER
+  IMAGE
+  VIDEO
+  AUDIO
+}
+
+model DbFile {
+  id          BigInt @id @default(autoincrement())
+  mime        String @db.VarChar(255) // mime type
+  sha256      String @db.VarChar(64) @unique
+  size        Int // bytes size
+  width       Int? // for image or video
+  height      Int? // for image or video
+  durationSec Int? // for video or audio
+  pathToFile  String @db.VarChar(255) // local path
+
+  type        MediaType
+  isBanned    Boolean   @default(false)
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  refs        DbFileRef[]
 }
