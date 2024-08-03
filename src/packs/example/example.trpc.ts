@@ -1,12 +1,12 @@
-import { publicProcedure, router } from '!src/lib/trpc';
+import { publicProcedure, router } from '~/lib/trpc';
 import { z } from 'zod';
 import { zfd } from 'zod-form-data';
-import type { ExampleService } from '../example/example.service';
+import type { ExampleService } from './example.service';
 import { TRPCError } from '@trpc/server';
-import { usePrisma } from '!src/packs/prisma/prisma.pack';
-import { useBcrypt } from '!src/lib/bcrypt';
-import { serializePrismaDataForJson } from '!src/lib/utils/serialize_prisma';
-import { zodFormDataOrObject } from '!src/lib/utils/zod';
+import { useBcrypt } from '~/lib/bcrypt';
+import { serializePrismaDataForJson } from '~/lib/utils/serialize_prisma';
+import { zodFormDataOrObject } from '~/lib/utils/zod';
+import { usePrisma } from '~/lib/prisma';
 
 export function createExampleTrpc(exampleService: ExampleService) {
   const prisma = usePrisma();

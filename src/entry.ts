@@ -1,11 +1,15 @@
 import { Hono } from 'hono';
 import { trpcServer } from '@hono/trpc-server';
-import { router, createContext } from '!src/lib/trpc';
-import * as AppLifecycle from '!src/lib/app_lifecycle';
-import { exampleHono } from './packs/example/example.pack';
-import { exampleTrpc, guestTrpc, userTrpc } from './packs/trpc/trpc.pack';
+import { router, createContext } from '~/lib/trpc';
+import * as AppLifecycle from '~/lib/app_lifecycle';
+import {
+  exampleHono,
+  exampleTrpc,
+  guestTrpc,
+  userTrpc,
+} from './packs/example/example.pack';
 import { serveStatic } from 'hono/bun';
-import { useEnv } from '!src/lib/env/env';
+import { useEnv } from '~/lib/env/env';
 import fsExtra from 'fs-extra/esm';
 
 const trpcRouter = router({

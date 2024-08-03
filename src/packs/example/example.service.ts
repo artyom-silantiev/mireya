@@ -1,4 +1,4 @@
-import { useEnv } from '!src/lib/env/env';
+import { useEnv } from '~/lib/env/env';
 import { createWriteStream } from 'fs';
 import { join } from 'path';
 import { Readable } from 'stream';

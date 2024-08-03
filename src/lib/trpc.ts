@@ -1,5 +1,5 @@
 import { initTRPC } from '@trpc/server';
-import { verifyToken, type JtwUserPayload } from '../packs/jwt/jwt.pack';
+import { verifyToken, type JtwUserPayload } from './jwt';
 
 export async function createContext(ctx: { req: Request }) {
   let user = null as JtwUserPayload | null;

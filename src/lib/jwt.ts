@@ -1,4 +1,4 @@
-import { useEnv } from '!src/lib/env/env';
+import { useEnv } from '~/lib/env/env';
 import jwt from 'jsonwebtoken';
 
 export type JtwUserPayloadData = { userId: string };
