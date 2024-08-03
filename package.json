@@ -4,7 +4,7 @@
   "description": "Backend app template",
   "type": "module",
   "scripts": {
-    "dev": "bun --watch src/app_main/index.ts",
+    "dev": "bun --watch src/entry.ts",
     "tests": "bun test ./tests/*.test.ts"
   },
   "peerDependencies": {

@@ -27,9 +27,7 @@
 
     // paths
     "paths": {
-      "!src/*": ["./src/*"],
-      "!db/*": ["./src/lib_db/*"],
-      "!share/*": ["./src/lib_share/*"]
+      "!src/*": ["./src/*"]
     }
   }
 }

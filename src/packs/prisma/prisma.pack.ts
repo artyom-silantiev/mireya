@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { onAppDestroy } from '!src/lib_share/app_lifecycle';
+import { onAppDestroy } from '!src/lib/app_lifecycle';
 
 const prisma = new PrismaClient();
 

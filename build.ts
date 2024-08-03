@@ -5,7 +5,7 @@ await fs.rm('./dist', { force: true, recursive: true });
 
 // build bundles
 const res = await Bun.build({
-  entrypoints: ['./src/app_main/main.ts'],
+  entrypoints: ['./src/entry.ts'],
   target: 'node',
   outdir: './dist',
 });

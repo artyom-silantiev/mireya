@@ -1,4 +1,4 @@
-import { useEnv } from '!src/lib_share/composables/env/env';
+import { useEnv } from '!src/lib/env/env';
 import jwt from 'jsonwebtoken';
 
 export type JtwUserPayloadData = { userId: string };
@@ -25,7 +25,7 @@ export function createToken(userId: string) {
 
 export async function verifyToken(token: string) {
   const payload = await new Promise<JtwUserPayloadData>((resolve, reject) => {
-    jwt.verify(token, env.JWT_SECRET_USER_LOGIN, (err, data) => {
+    jwt.verify(token, env.JWT_SECRET_USER_LOGIN, (err: any, data: any) => {
       if (err) {
         reject(err);
       } else {

@@ -1,9 +1,9 @@
-import { publicProcedure, router } from '!share/trpc';
-import { useBcrypt } from '!src/lib_share/composables/bcrypt';
+import { publicProcedure, router } from '!src/lib/trpc';
+import { useBcrypt } from '!src/lib/bcrypt';
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
-import { usePrisma } from '!src/lib_db/prisma.pack';
-import { createToken } from '!src/lib_share/packs/jwt/jwt.pack';
+import { usePrisma } from '!src/packs/prisma/prisma.pack';
+import { createToken } from '!src/packs/jwt/jwt.pack';
 
 export function createGuestTrpc() {
   const prisma = usePrisma();

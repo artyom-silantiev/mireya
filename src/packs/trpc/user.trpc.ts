@@ -1,7 +1,7 @@
-import { publicProcedure, router } from '!share/trpc';
+import { publicProcedure, router } from '!src/lib/trpc';
 import { TRPCError } from '@trpc/server';
-import { usePrisma } from '!src/lib_db/prisma.pack';
-import { serializePrismaDataForJson } from '!src/lib_share/utils';
+import { usePrisma } from '!src/packs/prisma/prisma.pack';
+import { serializePrismaDataForJson } from '!src/lib/utils/serialize_prisma';
 
 export function createUserTrpc() {
   const prisma = usePrisma();
