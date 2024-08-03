@@ -56,7 +56,7 @@ test('upload file', async () => {
   const uploadFileRes = await trpcClient.files.uploadFile.mutate(formData);
 
   console.log('uploadFileRes', uploadFileRes);
-  fileUid = uploadFileRes.fileRef.uid;
+  fileUid = uploadFileRes.uid;
 });
 
 test('get file', async () => {

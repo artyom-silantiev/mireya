@@ -3,7 +3,7 @@ import type { FileMeta } from './types';
 import type { FileRequest } from './file-request.class';
 import type { FilesDbService } from './filesdb.service';
 import type { FilesMakeService } from './files-make.service';
-import { FilesDefs } from './defs';
+import { FilesDefs } from './files-defs';
 import path from 'path';
 import fsExtra from 'fs-extra/esm';
 import { existsSync } from 'fs';

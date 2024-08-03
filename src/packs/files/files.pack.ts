@@ -23,6 +23,3 @@ export const filesOutPutService = new FilesOutputService(
 
 export const filesTrpc = createFilesTrpc(filesInputService, filesClearService);
 export const filesHone = createFilesHono(filesOutPutService);
-
-// TODO improve mime type
-// TODO add ext to dbFile row

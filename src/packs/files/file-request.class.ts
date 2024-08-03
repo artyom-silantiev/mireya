@@ -1,6 +1,6 @@
 import { type DbFile } from '@prisma/client';
 import { resolve } from 'path';
-import { FilesDefs } from './defs';
+import { FilesDefs } from './files-defs';
 import { useEnv } from '~/lib/env/env';
 
 export type ThumbParam = {

@@ -19,8 +19,8 @@ export class FilesInputService {
     const webRs = file.stream();
     const rs = Readable.fromWeb(webRs);
     const tempName = bs58.uid();
-    const tempFile = join(env.DIR_TEMP, tempName);
-    const ws = createWriteStream(tempFile);
+    const tmpFile = join(env.DIR_TEMP, tempName);
+    const ws = createWriteStream(tmpFile);
 
     rs.pipe(ws);
     await new Promise<boolean>((resolve, reject) => {
@@ -32,16 +32,11 @@ export class FilesInputService {
       });
     });
 
-    const fileRef = await this.uploadFileByFilePath(tempFile);
-
-    return fileRef;
-  }
-
-  async uploadFileByFilePath(imageFile: string) {
-    const fileWrap = await this.filesMake.createFileDb(imageFile);
+    const fileWrap = await this.filesMake.createFileDb(tmpFile);
     const fileRef = await this.filesDbService.createFileRefByFile(
       fileWrap.file,
     );
-    return { status: 201, fileRef };
+
+    return fileRef;
   }
 }

@@ -1,7 +1,7 @@
 import { usePrisma } from '~/lib/prisma';
 import type { FilesCacheService } from './files-cache.service';
 import path from 'path';
-import { FilesDefs } from './defs';
+import { FilesDefs } from './files-defs';
 import fsExtra from 'fs-extra/esm';
 import type { DbFileRef } from '@prisma/client';
 

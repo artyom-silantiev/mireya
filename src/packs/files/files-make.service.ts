@@ -3,11 +3,10 @@ import { useEnv } from '~/lib/env/env';
 import { usePrisma } from '~/lib/prisma';
 import type { FilesDbService } from './filesdb.service';
 import fsExtra from 'fs-extra/esm';
-import { stat } from 'fs/promises';
 import { MediaType, type DbFile } from '@prisma/client';
-import { getFileSha256, getMimeFromPath } from '~/lib/utils/files';
+import { getFileSha256, getFileInfo } from '~/lib/utils/files';
 import type { FileMeta, FileWrap } from './types';
-import { FilesDefs } from './defs';
+import { FilesDefs } from './files-defs';
 import type { ThumbParam } from './file-request.class';
 import sharp from 'sharp';
 import path from 'path';
@@ -24,10 +23,6 @@ export class FilesMakeService {
   async createFileDb(
     tempFile: string,
     params?: {
-      thumbData?: {
-        orgFileDbId: bigint;
-        name: string;
-      };
       noValidation?: boolean;
     },
   ): Promise<FileWrap> {
@@ -42,23 +37,21 @@ export class FilesMakeService {
       return { ...fileWrap, ...{ status: 208 } };
     }
 
-    const mime = await getMimeFromPath(tempFile);
-    const fstat = await stat(tempFile);
+    const { fileMime, fstat } = await getFileInfo(tempFile);
 
     let contentType = MediaType.OTHER as MediaType;
-    if (mime.startsWith('image/')) {
+    if (fileMime.startsWith('image/')) {
       contentType = MediaType.IMAGE;
-    } else if (mime.startsWith('audio/')) {
+    } else if (fileMime.startsWith('audio/')) {
       contentType = MediaType.AUDIO;
-    } else if (mime.startsWith('video/')) {
+    } else if (fileMime.startsWith('video/')) {
       contentType = MediaType.VIDEO;
     }
 
     let size!: number;
-    let width: number;
-    let height: number;
+    let width!: number;
+    let height!: number;
     let duration: number;
-    let frameRate = 0;
 
     if (contentType === MediaType.IMAGE) {
       const imageInfo = await sharp(tempFile).metadata();
@@ -79,20 +72,11 @@ export class FilesMakeService {
       width = stream.width!;
       height = stream.height!;
       duration = parseFloat(stream.duration!);
-      frameRate = parseFloat(stream.r_frame_rate!);
     } else {
-      const fileStat = await stat(tempFile);
-      size = fileStat.size;
+      size = fstat.size;
     }
 
     if (!params || !params.noValidation) {
-    }
-
-    if (params && params.thumbData) {
-      if (contentType !== MediaType.IMAGE) {
-        await fsExtra.remove(tempFile);
-        throw 500;
-      }
     }
 
     const now = dayjs();
@@ -110,10 +94,10 @@ export class FilesMakeService {
     const file = await this.prisma.dbFile.create({
       data: {
         sha256: fileSha256Hash,
-        mime,
+        mime: fileMime,
         size,
-        width: width! || null,
-        height: height! || null,
+        width: width || null,
+        height: height || null,
         durationSec: duration! ? Math.floor(duration) : null,
         pathToFile: locPathToFile,
         type: contentType,
