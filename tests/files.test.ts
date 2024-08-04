@@ -57,14 +57,13 @@ test('upload file', async () => {
 
   console.log('uploadFileRes', uploadFileRes);
   fileUid = uploadFileRes.uid;
+  expect(fileUid).toBeString();
 });
 
 test('get file', async () => {
   const res1 = await fetch(`http://localhost:3000/files/${fileUid}`);
   const res2 = await fetch(`http://localhost:3000/files/${fileUid}/file.ts`);
-
   console.log(res2);
-
   expect(res1.status).toBe(200);
   expect(res2.status).toBe(200);
 });
@@ -74,6 +73,7 @@ test('delete file', async () => {
     fileRefUid: fileUid,
   });
   console.log(res);
+  expect(res.message).toBeString();
 });
 
 afterAll(async () => {});

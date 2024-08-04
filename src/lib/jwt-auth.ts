@@ -35,12 +35,12 @@ export type JwtAuthData = {
 class JtwAuthCacheService {
   private redisCacheKeyPrefix = 'jwt';
 
-  key(jwtType: JwtType, uid: string) {
-    return `${this.redisCacheKeyPrefix}:${jwtType}:${uid}`;
+  key(uid: string, jwtType: JwtType) {
+    return `${this.redisCacheKeyPrefix}:${uid}:${jwtType}`;
   }
 
-  async get(jwtType: JwtType, uid: string) {
-    const key = this.key(jwtType, uid);
+  async get(uid: string, jwtType: JwtType) {
+    const key = this.key(uid, jwtType);
     const data = await redis.get(key);
     if (data) {
       return JSON.parse(data) as JwtAuthData;
@@ -48,9 +48,16 @@ class JtwAuthCacheService {
     return null;
   }
 
-  async set(jwtType: JwtType, uid: string, data: JwtAuthData) {
-    const key = this.key(jwtType, uid);
+  async set(uid: string, jwtType: JwtType, data: JwtAuthData) {
+    const key = this.key(uid, jwtType);
     await redis.set(key, JSON.stringify(data), 'EX', 600);
+  }
+
+  async clearByUid(uid: string) {
+    const keys = await redis.keys(`${this.redisCacheKeyPrefix}:${uid}*`);
+    for (const key of keys) {
+      await redis.del(key);
+    }
   }
 }
 const jwtAuthCacheService = new JtwAuthCacheService();
@@ -118,10 +125,18 @@ export async function createAuthTokens(user: User, userRole: UserRole) {
 }
 
 export async function verifyAccessToken(accessToken: string) {
-  const payload = (await verify(
-    accessToken,
-    env.JWT_SECRET_USER_AUTH,
-  )) as JtwAuthPayload;
+  let payload!: JtwAuthPayload;
+  try {
+    payload = (await verify(
+      accessToken,
+      env.JWT_SECRET_USER_AUTH,
+    )) as JtwAuthPayload;
+  } catch (error) {
+    throw new TRPCError({
+      code: 'FORBIDDEN',
+      message: 'bad token',
+    });
+  }
 
   if (payload.t !== 'A') {
     throw new TRPCError({
@@ -130,7 +145,7 @@ export async function verifyAccessToken(accessToken: string) {
     });
   }
 
-  let jwtData = await jwtAuthCacheService.get(JwtType.ACCESS_TOKEN, payload.u);
+  let jwtData = await jwtAuthCacheService.get(payload.u, JwtType.ACCESS_TOKEN);
   if (!jwtData) {
     const jwtAccess = await prisma.jwt.findFirst({
       where: {
@@ -152,7 +167,7 @@ export async function verifyAccessToken(accessToken: string) {
       userRole: jwtMeta.userRole,
     };
 
-    await jwtAuthCacheService.set(JwtType.ACCESS_TOKEN, payload.u, jwtData);
+    await jwtAuthCacheService.set(payload.u, JwtType.ACCESS_TOKEN, jwtData);
   }
 
   const jtwUserPayload = new JtwAuth(BigInt(jwtData.userId), jwtData.userRole);
@@ -161,10 +176,18 @@ export async function verifyAccessToken(accessToken: string) {
 }
 
 export async function useRefreshToken(refreshToken: string) {
-  const payload = (await verify(
-    refreshToken,
-    env.JWT_SECRET_USER_AUTH,
-  )) as JtwAuthPayload;
+  let payload!: JtwAuthPayload;
+  try {
+    payload = (await verify(
+      refreshToken,
+      env.JWT_SECRET_USER_AUTH,
+    )) as JtwAuthPayload;
+  } catch (error) {
+    throw new TRPCError({
+      code: 'FORBIDDEN',
+      message: 'bad token',
+    });
+  }
 
   if (payload.t !== 'R') {
     throw new TRPCError({
@@ -203,6 +226,7 @@ export async function useRefreshToken(refreshToken: string) {
       uid: jwtRefresh.uid,
     },
   });
+  await jwtAuthCacheService.clearByUid(jwtRefresh.uid);
 
   return newAuthTokens;
 }
