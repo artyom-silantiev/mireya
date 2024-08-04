@@ -25,6 +25,7 @@ export type JtwAuthMetaData = {
 export type JtwAuthPayload = {
   t: 'A' | 'R'; // A = access, R = refresh
   u: string; // token uid
+  exp: number;
 };
 
 export type JwtAuthData = {
@@ -116,7 +117,7 @@ export async function createAuthTokens(user: User, userRole: UserRole) {
     {
       t: 'R',
       u: refreshJwt.uid,
-      exp: expAccess,
+      exp: expRefresh,
     } as JtwAuthPayload,
     env.JWT_SECRET_USER_AUTH,
   );
@@ -193,6 +194,14 @@ export async function useRefreshToken(refreshToken: string) {
     throw new TRPCError({
       code: 'FORBIDDEN',
       message: 'bad refresh token',
+    });
+  }
+
+  const tmpExp = payload.exp - Math.floor(Date.now() / 1000);
+  if (tmpExp > 60 * 60 * 48) {
+    throw new TRPCError({
+      code: 'BAD_REQUEST',
+      message: 'too early for use refresh ',
     });
   }
 

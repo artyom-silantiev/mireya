@@ -8,6 +8,9 @@ import {
 import type { TrpcAppRouter } from '~/entry';
 import { test, beforeAll, afterAll, expect } from 'bun:test';
 import * as fse from 'fs-extra';
+import { verify, sign } from 'hono/jwt';
+import { useEnv } from '~/lib/env/env';
+import type { JtwAuthPayload } from '~/lib/jwt-auth';
 
 const NODE_PORT = '3000';
 const url = `http://localhost:${NODE_PORT}/trpc`;
@@ -91,8 +94,30 @@ test('user login', async () => {
 });
 
 test('use refresh', async () => {
-  const refreshRes = await trpcClient.guest.useRefreshToken.mutate({
+  try {
+    await trpcClient.guest.useRefreshToken.mutate({
+      refreshToken,
+    });
+  } catch (error) {
+    console.log('error', error);
+    expect(error).toBeInstanceOf(Error);
+  }
+
+  const payload = (await verify(
     refreshToken,
+    useEnv().JWT_SECRET_USER_AUTH,
+  )) as JtwAuthPayload;
+  const modRefreshToken = await sign(
+    {
+      t: 'R',
+      u: payload.u,
+      exp: payload.exp - 60 * 60 * 24,
+    } as JtwAuthPayload,
+    useEnv().JWT_SECRET_USER_AUTH,
+  );
+
+  const refreshRes = await trpcClient.guest.useRefreshToken.mutate({
+    refreshToken: modRefreshToken,
   });
   accessToken = refreshRes.accessToken;
   refreshToken = refreshRes.refreshToken;

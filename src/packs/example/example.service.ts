@@ -9,12 +9,14 @@ const bs58 = useBs58();
 
 export class ExampleService {
   async upload(file: File) {
-    const webRs = file.stream();
-    const rs = Readable.fromWeb(webRs);
     const tempName = bs58.uid();
     const tmpFile = join(env.DIR_TEMP, tempName);
-    const ws = createWriteStream(tmpFile);
+    console.log('tmpFile', tmpFile);
 
+    /*
+    const webRs = file.stream();
+    const rs = Readable.fromWeb(webRs);
+    const ws = createWriteStream(tmpFile);
     rs.pipe(ws);
     await new Promise<boolean>((resolve, reject) => {
       rs.on('end', () => {
@@ -24,5 +26,6 @@ export class ExampleService {
         reject(err);
       });
     });
+    */
   }
 }
