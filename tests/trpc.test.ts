@@ -6,7 +6,7 @@ import {
   splitLink,
 } from '@trpc/client';
 import type { TrpcAppRouter } from '~/entry';
-import { test, beforeAll, afterAll } from 'bun:test';
+import { test, beforeAll, afterAll, expect } from 'bun:test';
 import * as fse from 'fs-extra';
 
 const NODE_PORT = '3000';
@@ -75,16 +75,29 @@ test('create user', async () => {
     password: 'bob_password_1',
   });
   console.log('createdUser', createdUser1, '\n');
+  expect(createdUser1.email).toBe('example1@example.com');
 });
 
-let authToken = '';
+let accessToken = '';
+let refreshToken = '';
 test('user login', async () => {
-  const loginResult = await trpcClient.guest.userLogin.mutate({
+  const authRes = await trpcClient.guest.userLogin.mutate({
     email: 'example1@example.com',
     password: 'bob_password_1',
   });
-  authToken = loginResult.token;
-  console.log('loginResult', loginResult, '\n');
+  accessToken = authRes.accessToken;
+  refreshToken = authRes.refreshToken;
+  console.log('authRes', authRes, '\n');
+});
+
+test('use refresh', async () => {
+  const refreshRes = await trpcClient.guest.useRefreshToken.mutate({
+    refreshToken,
+  });
+  expect(refreshRes.message).toBe('ok');
+  accessToken = refreshRes.accessToken;
+  refreshToken = refreshRes.refreshToken;
+  console.log('refreshRes', refreshRes, '\n');
 });
 
 test('try bad login', async () => {
@@ -95,6 +108,7 @@ test('try bad login', async () => {
     });
   } catch (error) {
     console.log(error, '\n');
+    expect(error).toBeInstanceOf(Error);
   }
 });
 
@@ -106,20 +120,23 @@ test('try not found user login', async () => {
     });
   } catch (error) {
     console.log(error, '\n');
+    expect(error).toBeInstanceOf(Error);
   }
 });
 
 test('get user private data', async () => {
-  const authedTrcpClient = createTrcpClient(authToken);
+  const authedTrcpClient = createTrcpClient(accessToken);
   const userPrivateDataRes = await authedTrcpClient.user.getInfo.query();
   console.log('userPrivateDataRes', userPrivateDataRes);
+  expect(userPrivateDataRes.email).toBe('example1@example.com');
 });
 
 test('try get user private data', async () => {
   try {
     await trpcClient.user.getInfo.query();
-  } catch (err) {
-    console.log('err', err);
+  } catch (error) {
+    console.log('err', error);
+    expect(error).toBeInstanceOf(Error);
   }
 });
 
@@ -128,11 +145,13 @@ test('get user', async () => {
     id: createdUser1.id,
   });
   console.log('user', user, '\n');
+  expect(user.email).toBe(createdUser1.email);
 });
 
 test('get users', async () => {
   const users = await trpcClient.example.getUsers.query();
   console.log('users', users, '\n');
+  expect(users).toBeArray();
 });
 
 test('delete user', async () => {
@@ -140,6 +159,7 @@ test('delete user', async () => {
     id: createdUser1.id,
   });
   console.log('deleteUserMsg', deleteUserMsg, '\n');
+  expect(deleteUserMsg).toBeString();
 });
 
 test('delete user again', async () => {
@@ -150,6 +170,7 @@ test('delete user again', async () => {
     console.log('deleteUserMsg', deleteUserMsg, '\n');
   } catch (error) {
     console.log(error, '\n');
+    expect(error).toBeInstanceOf(Error);
   }
 });
 

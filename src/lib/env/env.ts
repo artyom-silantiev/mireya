@@ -57,7 +57,7 @@ export class Env {
   REDIS_PORT = toInt(E.REDIS_PORT, 6379);
   REDIS_DB = toInt(E.REDIS_DB, 0);
 
-  JWT_SECRET_USER_LOGIN = toString(E.JWT_SECRET_USER_LOGIN, 'JWT_SECRET_USER_LOGIN');
+  JWT_SECRET_USER_AUTH = toString(E.JWT_SECRET_USER_AUTH, 'JWT_SECRET_USER_AUTH');
 
   DIR_DATA = toPath(E.DIR_DATA, './data');
   DIR_TEMP = toPath(E.DIR_TEMP, './temp');

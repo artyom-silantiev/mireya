@@ -2,15 +2,16 @@ import { publicProcedure, router } from '~/lib/trpc';
 import { useBcrypt } from '~/lib/bcrypt';
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
-import { createToken } from '~/lib/jwt';
+import { createAuthTokens, useRefreshToken } from '~/lib/jwt-auth';
 import { usePrisma } from '~/lib/prisma';
+import { UserRole } from '@prisma/client';
+import { serializePrismaDataForJson } from '~/lib/utils/serialize_prisma';
 
 export function createGuestTrpc() {
   const prisma = usePrisma();
   const bcrypt = useBcrypt();
 
   return router({
-    // createUser method
     createUser: publicProcedure
       .input(
         z.object({
@@ -49,7 +50,6 @@ export function createGuestTrpc() {
         };
       }),
 
-    // user login
     userLogin: publicProcedure
       .input(
         z.object({
@@ -77,18 +77,33 @@ export function createGuestTrpc() {
         );
 
         if (compareResult) {
-          const token = createToken(user.id.toString());
+          const tokensData = await createAuthTokens(user, UserRole.USER);
 
-          return {
+          return serializePrismaDataForJson({
             message: 'ok',
-            token: token,
-          };
+            ...tokensData,
+          });
         } else {
           throw new TRPCError({
             code: 'FORBIDDEN',
             message: 'bad login',
           });
         }
+      }),
+
+    useRefreshToken: publicProcedure
+      .input(
+        z.object({
+          refreshToken: z.string(),
+        }),
+      )
+      .mutation(async ({ input }) => {
+        const newTokens = await useRefreshToken(input.refreshToken);
+
+        return serializePrismaDataForJson({
+          message: 'ok',
+          ...newTokens,
+        });
       }),
   });
 }

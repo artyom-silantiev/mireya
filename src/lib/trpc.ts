@@ -1,14 +1,13 @@
 import { initTRPC } from '@trpc/server';
-import { verifyToken, type JtwUserPayload } from './jwt';
+import { verifyAccessToken, type JtwAuth } from './jwt-auth';
 
 export async function createContext(ctx: { req: Request }) {
-  let user = null as JtwUserPayload | null;
+  let user = null as JtwAuth | null;
 
   let authorizationHeader = ctx.req.headers.get('authorization');
   if (authorizationHeader) {
     const token = authorizationHeader.split(' ')[1] as string;
-    const payload = await verifyToken(token);
-    user = payload;
+    user = await verifyAccessToken(token);
   }
 
   return { user };

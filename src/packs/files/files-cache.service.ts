@@ -2,15 +2,15 @@ import { useRedis } from '~/lib/redis';
 import type { FileRequest } from './file-request.class';
 import type { FileMeta } from './types';
 
-const prefixKey = 'file';
+const redisCacheKeyPrefix = 'file';
 
 export class FilesCacheService {
   getPrefixKey() {
-    return prefixKey;
+    return redisCacheKeyPrefix;
   }
 
   key(fileReq: FileRequest) {
-    let fileCache = `${prefixKey}:${fileReq.uid}`;
+    let fileCache = `${redisCacheKeyPrefix}:${fileReq.uid}`;
     if (fileReq.thumb) {
       fileCache += ':' + fileReq.thumb.name;
     }
@@ -30,7 +30,7 @@ export class FilesCacheService {
 
   async delRefByUid(uid: string) {
     const redis = useRedis();
-    const keys = await redis.keys(`${prefixKey}:${uid}*`);
+    const keys = await redis.keys(`${redisCacheKeyPrefix}:${uid}*`);
     for (const key of keys) {
       await redis.del(key);
     }

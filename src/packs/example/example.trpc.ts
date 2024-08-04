@@ -131,6 +131,11 @@ export function createExampleTrpc(exampleService: ExampleService) {
           });
         }
 
+        await prisma.jwt.deleteMany({
+          where: {
+            userId: user.id,
+          },
+        });
         await prisma.user.delete({
           where: {
             id: user.id,
