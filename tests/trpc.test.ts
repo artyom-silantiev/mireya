@@ -110,7 +110,7 @@ test('use refresh', async () => {
   const modRefreshToken = await sign(
     {
       t: 'R',
-      u: payload.u,
+      id: payload.id,
       exp: payload.exp - 60 * 60 * 24,
     } as JtwAuthPayload,
     useEnv().JWT_SECRET_USER_AUTH,
