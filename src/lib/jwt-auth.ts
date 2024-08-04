@@ -1,9 +1,10 @@
-import { useEnv } from '~/lib/env/env';
+import { NodeRole, useEnv } from '~/lib/env/env';
 import { sign, verify } from 'hono/jwt';
 import { TRPCError } from '@trpc/server';
 import { usePrisma } from './prisma';
 import { type User, type UserRole } from '@prisma/client';
 import { useRedis } from './redis';
+import { CronJob } from 'cron';
 
 const prisma = usePrisma();
 const env = useEnv();
@@ -205,4 +206,35 @@ export async function useRefreshToken(refreshToken: string) {
   await jwtAuthCacheService.del(jwtAuth.id.toString());
 
   return newAuthTokens;
+}
+
+export async function clearJwtAuths() {
+  console.log('clearJwtAuths', new Date().toISOString());
+
+  const oldJwtAuths = await prisma.jwtAuth.findMany({
+    where: {
+      refreshExp: {
+        lt: new Date(),
+      },
+    },
+  });
+
+  if (oldJwtAuths.length > 0) {
+    await prisma.jwtAuth.deleteMany({
+      where: {
+        id: {
+          in: oldJwtAuths.map((x) => x.id),
+        },
+      },
+    });
+  }
+}
+
+if (env.NODE_ROLE === NodeRole.MASTER) {
+  CronJob.from({
+    cronTime: '0 0 * * * *',
+    onTick: clearJwtAuths,
+    start: true,
+  });
+  console.log('- run cron clearJwtAuths');
 }

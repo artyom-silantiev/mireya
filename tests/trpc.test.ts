@@ -10,7 +10,8 @@ import { test, beforeAll, afterAll, expect } from 'bun:test';
 import * as fse from 'fs-extra';
 import { verify, sign } from 'hono/jwt';
 import { useEnv } from '~/lib/env/env';
-import type { JtwAuthPayload } from '~/lib/jwt-auth';
+import { clearJwtAuths, type JtwAuthPayload } from '~/lib/jwt-auth';
+import { usePrisma } from '~/lib/prisma';
 
 const NODE_PORT = '3000';
 const url = `http://localhost:${NODE_PORT}/trpc`;
@@ -40,7 +41,7 @@ function createTrcpClient(token?: string) {
   return trpcClient;
 }
 
-await Bun.sleep(1000);
+const prisma = usePrisma();
 const trpcClient = createTrcpClient();
 
 beforeAll(async () => {
@@ -181,6 +182,51 @@ test('get user', async () => {
 test('get users', async () => {
   const users = await trpcClient.example.getUsers.query();
   expect(users).toBeArray();
+});
+
+test('clear jwt', async () => {
+  const userId = BigInt(createdUser1.id);
+
+  for (let i = 0; i < 3; i++) {
+    await prisma.jwtAuth.create({
+      data: {
+        userRole: 'USER',
+        userId: userId,
+        accessExp: new Date(),
+        refreshExp: new Date(Date.now() + 60 * 60 * 24 * 5 * 1000),
+      },
+    });
+  }
+
+  function getUserJwtAuthsCount() {
+    return prisma.jwtAuth.count({
+      where: {
+        userId,
+      },
+    });
+  }
+
+  let countJwtAuths = await getUserJwtAuthsCount();
+  expect(countJwtAuths).toBe(4); // 1 from up tests + 3 from this test
+
+  await clearJwtAuths();
+
+  countJwtAuths = await getUserJwtAuthsCount();
+  expect(countJwtAuths).toBe(4);
+
+  await prisma.jwtAuth.updateMany({
+    where: {
+      userId,
+    },
+    data: {
+      refreshExp: new Date(),
+    },
+  });
+
+  await clearJwtAuths();
+
+  countJwtAuths = await getUserJwtAuthsCount();
+  expect(countJwtAuths).toBe(0);
 });
 
 test('delete user', async () => {

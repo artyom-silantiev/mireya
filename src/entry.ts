@@ -45,7 +45,7 @@ AppLifecycle.onAppInit(async () => {
   await fsExtra.mkdirs(env.DIR_DATA);
   await fsExtra.mkdirs(env.DIR_TEMP);
 
-  console.log(env);
+  env.print();
   console.log('application run');
 });
 AppLifecycle.onAppDestroy(() => {

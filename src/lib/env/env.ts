@@ -90,6 +90,20 @@ export class Env {
   getNodeProtocol() {
     return this.getBaseProtocol(this.NODE_PROTOCOL);
   }
+
+  print() {
+    console.log('ENV PRINT {');
+    for (const entery of Object.entries(this)) {
+      let [key, value] = entery;
+      if (typeof value !== 'function') {
+        if (key.includes('SECRET')) {
+          value = value.replace(/./g, '*');
+        }
+        console.log(`${key}=${value}`);
+      }
+    }
+    console.log('} END ENV PRINT');
+  }
 }
 
 export function getDefaultEnv() {
