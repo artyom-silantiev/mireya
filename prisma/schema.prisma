@@ -45,6 +45,24 @@ model JwtAuth {
   @@index([userRole, userId])
 }
 
+model TaskMailSend {
+  id       BigInt   @id @default(autoincrement())
+  data     Json     @db.Json
+  attempts Int      @default(0) @db.SmallInt
+
+  forNodeUid  String?   @db.VarChar(32)
+  isActive    Boolean   @default(false)
+  isFail      Boolean   @default(false)
+  lastStartAt DateTime?
+  failAt      DateTime?
+  errorText   String?   @db.Text
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([isActive])
+}
+
 model DbFileRef {
   id          BigInt       @id @default(autoincrement())
   uid         String       @unique @db.VarChar(24)

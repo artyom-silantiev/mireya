@@ -12,6 +12,7 @@ services:
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - REDIS_DB=0
+      - MAILER_SMTP_HOST=maildev
     depends_on:
       db:
         condition: service_healthy
@@ -50,3 +51,11 @@ services:
     restart: always
     healthcheck:
       test: ['CMD', 'redis-cli', '--raw', 'incr', 'ping']
+
+  maildev:
+    container_name: cool-mail
+    image: maildev/maildev
+    restart: always
+    ports:
+      - 1080:1080
+      - 1025:1025

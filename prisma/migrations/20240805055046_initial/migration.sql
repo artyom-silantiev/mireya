@@ -31,6 +31,23 @@ CREATE TABLE "JwtAuth" (
 );
 
 -- CreateTable
+CREATE TABLE "TaskMailSend" (
+    "id" BIGSERIAL NOT NULL,
+    "data" JSON NOT NULL,
+    "attempts" SMALLINT NOT NULL DEFAULT 0,
+    "forNodeUid" VARCHAR(32),
+    "isActive" BOOLEAN NOT NULL DEFAULT false,
+    "isFail" BOOLEAN NOT NULL DEFAULT false,
+    "lastStartAt" TIMESTAMP(3),
+    "failAt" TIMESTAMP(3),
+    "errorText" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "TaskMailSend_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "DbFileRef" (
     "id" BIGSERIAL NOT NULL,
     "uid" VARCHAR(24) NOT NULL,
@@ -64,6 +81,9 @@ CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- CreateIndex
 CREATE INDEX "JwtAuth_userRole_userId_idx" ON "JwtAuth"("userRole", "userId");
+
+-- CreateIndex
+CREATE INDEX "TaskMailSend_isActive_idx" ON "TaskMailSend"("isActive");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "DbFileRef_uid_key" ON "DbFileRef"("uid");

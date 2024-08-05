@@ -236,5 +236,5 @@ if (env.NODE_ROLE === NodeRole.MASTER) {
     onTick: clearJwtAuths,
     start: true,
   });
-  console.log('- run cron clearJwtAuths');
+  console.log('- run cron job: clearJwtAuths');
 }

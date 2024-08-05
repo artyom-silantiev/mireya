@@ -29,6 +29,7 @@ COPY src src
 COPY prisma prisma
 COPY tests tests
 COPY static static
+COPY assets assets
 
 # ENV
 ENV NODE_PORT=3000
