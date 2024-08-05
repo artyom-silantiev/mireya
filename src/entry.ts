@@ -12,6 +12,7 @@ import { serveStatic } from 'hono/bun';
 import { useEnv } from '~/lib/env/env';
 import fsExtra from 'fs-extra/esm';
 import { filesHone, filesTrpc } from './packs/files/files.pack';
+import './packs/mailer/mailer.pack';
 
 const trpcRouter = router({
   example: exampleTrpc,

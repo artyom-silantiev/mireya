@@ -1,7 +1,7 @@
 import * as dotenv from 'dotenv';
 import * as path from 'path';
 import * as fs from 'fs-extra';
-import { shSync } from '../sh';
+import { shSync } from '../utils/sh';
 
 // set NODE_HOST if app running in docker container
 if (fs.existsSync('/.dockerenv')) {
