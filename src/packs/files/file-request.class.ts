@@ -1,7 +1,7 @@
 import { type DbFile } from '@prisma/client';
 import { resolve } from 'path';
-import { FilesDefs } from './files-defs';
 import { useEnv } from '~/lib/env/env';
+import { getThumbCacheDirForDbFile } from './files-utils';
 
 export type ThumbParam = {
   type: 'width' | 'name';
@@ -59,24 +59,12 @@ export class FileRequest {
   }
 
   getThumbFile(file: DbFile) {
-    const fileSha256Hash = file.sha256;
-    const p1 = fileSha256Hash.substring(0, 2);
-    const p2 = fileSha256Hash.substring(2, 4);
-    const p3 = fileSha256Hash.substring(4, 6);
-    const p4 = fileSha256Hash.substring(6, 8);
-    const p5 = fileSha256Hash;
-    const p6 = `${this.thumb.type}_${this.thumb.name}`;
+    const thumbCacheDir = getThumbCacheDirForDbFile(file);
+    const thumbTypeDir = `${this.thumb.type}_${this.thumb.name}`;
+    const thumbDir = resolve(thumbCacheDir, thumbTypeDir);
 
-    const thumbDir = resolve(
-      FilesDefs.DIR_IMAGES_THUMBS,
-      p1,
-      p2,
-      p3,
-      p4,
-      p5,
-      p6,
-    );
     return {
+      thumbDir,
       file: resolve(thumbDir, 'file.jpg'),
       meta: resolve(thumbDir, 'meta.json'),
     };

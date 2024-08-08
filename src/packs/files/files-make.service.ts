@@ -7,7 +7,7 @@ import { MediaType, type DbFile } from '@prisma/client';
 import { getFileSha256, getFileInfo } from '~/lib/utils/files';
 import type { FileMeta, FileWrap } from './types';
 import { FilesDefs } from './files-defs';
-import type { ThumbParam } from './file-request.class';
+import type { FileRequest } from './file-request.class';
 import sharp from 'sharp';
 import path from 'path';
 import { getMediaContentProbe } from '~/lib/utils/ffmpeg';
@@ -113,11 +113,7 @@ export class FilesMakeService {
 
   async createNewThumbForLocalFile(
     orgFile: DbFile,
-    thumb: ThumbParam,
-    thumbFile: {
-      file: string;
-      meta: string;
-    },
+    imageFileRequest: FileRequest,
   ) {
     const tmpNewThumbImageFile = path.resolve(
       this.env.DIR_TEMP,
@@ -126,6 +122,9 @@ export class FilesMakeService {
     const absFilePath = path.resolve(FilesDefs.DIR, orgFile.pathToFile);
     const image = sharp(absFilePath);
     const metadata = await image.metadata();
+
+    const thumb = imageFileRequest.thumb;
+    const thumbPaths = imageFileRequest.getThumbFile(orgFile);
 
     let info!: sharp.OutputInfo;
     if (thumb.type === 'width' && thumb.name) {
@@ -149,12 +148,12 @@ export class FilesMakeService {
       }
     }
 
-    const thumbDir = thumbFile.file.replace(/^(.*)\/.*$/, '$1');
+    const thumbDir = thumbPaths.thumbDir;
     await fsExtra.mkdirs(thumbDir);
-    await fsExtra.move(tmpNewThumbImageFile, thumbFile.file);
-    const sha256 = await getFileSha256(thumbFile.file);
+    await fsExtra.move(tmpNewThumbImageFile, thumbPaths.file);
+    const sha256 = await getFileSha256(thumbPaths.file);
     const thumbMeta = {
-      absPathToFile: thumbFile.file,
+      absPathToFile: thumbPaths.file,
       contentType: MediaType.IMAGE,
       mime: 'image/jpeg',
       size: info.size,
@@ -166,7 +165,7 @@ export class FilesMakeService {
       orgId: orgFile.id.toString(),
       createdAt: new Date().toISOString(),
     } as FileMeta;
-    await fsExtra.writeJSON(thumbFile.meta, thumbMeta);
+    await fsExtra.writeJSON(thumbPaths.meta, thumbMeta);
 
     return thumbMeta;
   }

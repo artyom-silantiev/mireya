@@ -71,8 +71,7 @@ export class FilesOutputService {
       if (!fileMeta) {
         fileMeta = await this.filesMakeService.createNewThumbForLocalFile(
           orgFile,
-          fileRefRequest.thumb,
-          thumbFile,
+          fileRefRequest,
         );
         status = 208;
       }
