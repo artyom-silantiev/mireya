@@ -22,8 +22,9 @@ const trpcRouter = router({
 });
 export type TrpcAppRouter = typeof trpcRouter;
 
-const app = new Hono()
-  .route('/api', exampleHono)
+const appWithApi = new Hono().route('/api', exampleHono);
+export type HonoAppType = typeof appWithApi;
+const appFull = appWithApi
   .route('/files', filesHone)
   .use(
     '/trpc/*',
@@ -39,8 +40,6 @@ const app = new Hono()
     }),
   );
 
-export type HonoAppType = typeof app;
-
 AppLifecycle.onAppInit(async () => {
   const env = useEnv();
   await fsExtra.mkdirs(env.DIR_DATA);
@@ -52,6 +51,7 @@ AppLifecycle.onAppInit(async () => {
 AppLifecycle.onAppDestroy(() => {
   console.log('application destroy');
 });
-AppLifecycle.applicationRun();
 
-export default app;
+await AppLifecycle.applicationRun();
+
+export default appFull;
