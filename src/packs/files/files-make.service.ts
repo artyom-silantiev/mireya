@@ -11,7 +11,6 @@ import type { ThumbParam } from './file-request.class';
 import sharp from 'sharp';
 import path from 'path';
 import { getMediaContentProbe } from '~/lib/utils/ffmpeg';
-import dayjs from 'dayjs';
 
 export class FilesMakeService {
   private env = useEnv();
@@ -79,12 +78,12 @@ export class FilesMakeService {
     if (!params || !params.noValidation) {
     }
 
-    const now = dayjs();
-    const year = now.format('YYYY');
-    const month = now.format('MM');
-    const day = now.format('DD');
+    const p1 = fileSha256Hash.substring(0, 2);
+    const p2 = fileSha256Hash.substring(2, 4);
+    const p3 = fileSha256Hash.substring(4, 6);
+    const p4 = fileSha256Hash.substring(6, 8);
     const locaFiles = FilesDefs.DIR;
-    const locDirForFile = path.join(year, month, day);
+    const locDirForFile = path.join(p1, p2, p3, p4);
     const absDirForFile = path.resolve(locaFiles, locDirForFile);
     const locPathToFile = path.join(locDirForFile, fileSha256Hash);
     const absPathToFile = path.resolve(absDirForFile, fileSha256Hash);
